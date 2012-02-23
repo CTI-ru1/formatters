@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>formatters</groupId>
+    <artifactId>formatters</artifactId>
+    <version>1.0</version>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>http://github.com/Uberdust/formatters</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Hudson</system>
+        <url>http://ru1.cti.gr/hudson/job/formatters/</url>
+    </ciManagement>
+
+    <properties>
+        <!--Properties needed for the Project-->
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <slf4j.version>1.6.4</slf4j.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>repository.ru1</id>
+            <url>http://ru1.cti.gr/maven</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>uberdust</groupId>
+            <artifactId>wisedb</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jibx</groupId>
+                    <artifactId>maven-jibx-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>jsr14</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.3.2</version>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>
+                            jar-with-dependencies
+                        </descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- this is used for inheritance merges -->
+                        <phase>package</phase>
+                        <!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>attached</goal>
+                            <!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <show>private</show>
+                </configuration>
+            </plugin>
+
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+
+    </build>
+
+
+    <distributionManagement>
+        <!-- use the following if you're not using a snapshot version. -->
+        <repository>
+            <id>repository.ru1</id>
+            <name>Ru1 Repo</name>
+            <url>scp://ru1.cti.gr/srv/maven</url>
+        </repository>
+
+    </distributionManagement>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <!-- <linkXref>true</linkXref>-->
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                    <targetJdk>1.6</targetJdk>
+                    <excludes>
+                        <exclude>**/test/**</exclude>
+                    </excludes>
+                    <rulesets>
+                        <ruleset>rulesets/basic.xml</ruleset>
+                        <ruleset>rulesets/braces.xml</ruleset>
+                        <ruleset>rulesets/clone.xml</ruleset>
+                        <ruleset>rulesets/codesize.xml</ruleset>
+                        <ruleset>rulesets/coupling.xml</ruleset>
+                        <ruleset>rulesets/design.xml</ruleset>
+                        <ruleset>rulesets/finalizers.xml</ruleset>
+                        <ruleset>rulesets/imports.xml</ruleset>
+                        <ruleset>rulesets/j2ee.xml</ruleset>
+                        <ruleset>rulesets/javabeans.xml</ruleset>
+                        <ruleset>rulesets/junit.xml</ruleset>
+                        <ruleset>rulesets/logging-jakarta-commons.xml</ruleset>
+                        <ruleset>rulesets/logging-java.xml</ruleset>
+                        <ruleset>rulesets/migrating.xml</ruleset>
+                        <ruleset>rulesets/naming.xml</ruleset>
+                        <ruleset>rulesets/optimizations.xml</ruleset>
+                        <ruleset>rulesets/strictexception.xml</ruleset>
+                        <ruleset>rulesets/strings.xml</ruleset>
+                        <ruleset>rulesets/sunsecure.xml</ruleset>
+                        <ruleset>rulesets/unusedcode.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <configLocation>sun_checks.xml</configLocation>
+                    <suppressionsFile>suppresssions.xml</suppressionsFile>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <show>public</show>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <findbugsXmlOutput>true</findbugsXmlOutput>
+                    <!-- Optional directory to put findbugs xml report -->
+                    <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </reporting>
+
+</project>
