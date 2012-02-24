@@ -21,6 +21,8 @@ import java.util.List;
 public interface Formatter {
     static final String TAB = "\t";
     static final String NEW_LINE = "\n";
+    static final String NULL = "null";
+
 
     public String formatTestbed(final Testbed testbed) throws NotImplementedException;
 
@@ -39,4 +41,5 @@ public interface Formatter {
     public String formatLinks(final List<Link> links) throws NotImplementedException;
 
     public String formatLastReadings(final List<LastNodeReading> lastNodeReadings, final List<LastLinkReading> lastLinkReadings) throws NotImplementedException;
+
 }

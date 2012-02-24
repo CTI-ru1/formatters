@@ -26,7 +26,6 @@ public class TextFormatter implements Formatter {
 
 
     private static TextFormatter instance = new TextFormatter();
-    private static final String NULL = "null";
 
     public static TextFormatter getInstance() {
         return instance;
