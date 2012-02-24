@@ -13,30 +13,23 @@ import eu.wisebed.wisedb.model.Testbed;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: amaxilatis
- * Date: 2/23/12
- * Time: 10:06 PM
+ * RdfFormatter Class.
+ * Implements the Formatter interface to present input to RDF format.
  */
 public class RdfFormatter implements Formatter {
 
-    private static RdfFormatter instance = null;
+    private static final RdfFormatter instance = new RdfFormatter();
 
     public static RdfFormatter getInstance() {
-        if (instance == null) {
-            instance = new RdfFormatter();
-        }
         return instance;
     }
 
-    public RdfFormatter() {
-
-    }
-
+    @Override
     public String formatTestbed(final Testbed testbed) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
+    @Override
     public String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
         throw new NotImplementedException();
     }

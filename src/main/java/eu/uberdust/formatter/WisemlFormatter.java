@@ -13,26 +13,23 @@ import eu.wisebed.wisedb.model.Testbed;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: amaxilatis
- * Date: 2/23/12
- * Time: 10:06 PM
+ * WisemlFormatter Class.
+ * Implements the Formatter interface to present input to WiseMl format.
  */
 public class WisemlFormatter implements Formatter {
 
-    private static WisemlFormatter instance = null;
+    private static final WisemlFormatter instance = new WisemlFormatter();
 
     public static WisemlFormatter getInstance() {
-        if (instance == null) {
-            instance = new WisemlFormatter();
-        }
         return instance;
     }
 
+    @Override
     public String formatTestbed(final Testbed testbed) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
+    @Override
     public String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
         throw new NotImplementedException();
     }

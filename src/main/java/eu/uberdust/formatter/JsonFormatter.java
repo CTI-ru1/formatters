@@ -23,17 +23,15 @@ import java.util.List;
  * Time: 10:06 PM
  */
 public class JsonFormatter implements Formatter {
-    private final static Logger LOGGER = Logger.getLogger(JsonFormatter.class);
+    private static final Logger LOGGER = Logger.getLogger(JsonFormatter.class);
 
-    private static JsonFormatter instance = null;
+    private static JsonFormatter instance = new JsonFormatter();
 
     public static JsonFormatter getInstance() {
-        if (instance == null) {
-            instance = new JsonFormatter();
-        }
         return instance;
     }
 
+    @Override
     public String formatTestbed(final Testbed testbed) throws NotImplementedException {
         LOGGER.info("formatTestbed");
         throw new NotImplementedException();
@@ -46,6 +44,7 @@ public class JsonFormatter implements Formatter {
         throw new NotImplementedException();
     }
 
+    @Override
     public String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
         LOGGER.info("formatTestbeds");
 

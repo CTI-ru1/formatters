@@ -34,14 +34,17 @@ public class HtmlFormatter implements Formatter {
         return instance;
     }
 
+    @Override
     public String formatTestbed(final Testbed testbed) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
+    @Override
     public String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
+    @Override
     public String formatNodeReadings(final List<NodeReading> nodeReadings) {
         final StringBuilder output = new StringBuilder();
 
@@ -61,20 +64,6 @@ public class HtmlFormatter implements Formatter {
         output.append(E_TABLE);
         return output.toString();
     }
-
-    private String headerCell(final String cont) {
-        final StringBuilder output = new StringBuilder();
-        output.append(S_TH).append(cont).append(E_TH);
-        return output.toString();
-    }
-
-
-    private String simpleCell(final String cont) {
-        final StringBuilder output = new StringBuilder();
-        output.append(S_TD).append(cont).append(E_TD);
-        return output.toString();
-    }
-
 
     @Override
     public String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {
@@ -106,5 +95,18 @@ public class HtmlFormatter implements Formatter {
     @Override
     public String formatLastReadings(final List<LastNodeReading> lastNodeReadings, final List<LastLinkReading> lastLinkReadings) throws NotImplementedException {
         throw new NotImplementedException();
+    }
+
+    private String headerCell(final String cont) {
+        final StringBuilder output = new StringBuilder();
+        output.append(S_TH).append(cont).append(E_TH);
+        return output.toString();
+    }
+
+
+    private String simpleCell(final String cont) {
+        final StringBuilder output = new StringBuilder();
+        output.append(S_TD).append(cont).append(E_TD);
+        return output.toString();
     }
 }
