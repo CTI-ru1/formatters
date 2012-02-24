@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class HtmlFormatter implements Formatter {
 
-    private static HtmlFormatter instance = null;
+    private static HtmlFormatter instance = new HtmlFormatter();
     private static final String S_TABLE = "<table>";
     private static final String E_TABLE = "</table>";
     private static final String S_ROW = "<tr>";
@@ -31,14 +31,7 @@ public class HtmlFormatter implements Formatter {
     private static final String E_TD = "</td>";
 
     public static HtmlFormatter getInstance() {
-        if (instance == null) {
-            instance = new HtmlFormatter();
-        }
         return instance;
-    }
-
-    public HtmlFormatter() {
-
     }
 
     public String formatTestbed(final Testbed testbed) throws NotImplementedException {
