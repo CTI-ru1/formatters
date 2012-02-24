@@ -1,17 +1,10 @@
 package eu.uberdust.formatter;
 
 import eu.uberdust.formatter.exception.NotImplementedException;
-import eu.wisebed.wisedb.model.Capability;
-import eu.wisebed.wisedb.model.LastLinkReading;
-import eu.wisebed.wisedb.model.LastNodeReading;
-import eu.wisebed.wisedb.model.Link;
-import eu.wisebed.wisedb.model.Node;
-import eu.wisebed.wisedb.model.NodeCapability;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wisedb.model.Position;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.model.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,6 +36,12 @@ public interface Formatter {
 
     public String formatLastReadings(final List<LastNodeReading> lastNodeReadings, final List<LastLinkReading> lastLinkReadings) throws NotImplementedException;
 
-    public String describeNode(final Node node, final String requestURL, final String requestURI, final String nodeDescription, final Position nodePos) throws NotImplementedException;
+    public String describeNode(final Node node, final String requestURL, final String requestURI,
+                               final String nodeDescription, final Position nodePos) throws NotImplementedException;
+
+    public String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
+                                  final List<Node> nodes, final Map<Node, String> descriptionMap,
+                                  final Map<Node, List<NodeCapability>> capabilityMap,
+                                  final Map<Node, Origin> originMap) throws NotImplementedException;
 
 }

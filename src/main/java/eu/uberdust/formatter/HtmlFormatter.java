@@ -1,17 +1,10 @@
 package eu.uberdust.formatter;
 
 import eu.uberdust.formatter.exception.NotImplementedException;
-import eu.wisebed.wisedb.model.Capability;
-import eu.wisebed.wisedb.model.LastLinkReading;
-import eu.wisebed.wisedb.model.LastNodeReading;
-import eu.wisebed.wisedb.model.Link;
-import eu.wisebed.wisedb.model.Node;
-import eu.wisebed.wisedb.model.NodeCapability;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wisedb.model.Position;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.model.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -100,6 +93,11 @@ public class HtmlFormatter implements Formatter {
 
     @Override
     public String describeNode(Node node, String requestURL, String requestURI, String nodeDescription, Position nodePos) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String describeTestbed(Testbed testbed, String requestURL, String requestURI, List<Node> nodes, Map<Node, String> descriptionMap, Map<Node, List<NodeCapability>> capabilityMap, Map<Node, Origin> originMap) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
