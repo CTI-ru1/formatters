@@ -1,7 +1,7 @@
 package eu.uberdust.formatter.test.tab;
 
 
-import eu.uberdust.formatter.HtmlFormatter;
+import eu.uberdust.formatter.TextFormatter;
 import eu.wisebed.wisedb.model.NodeReading;
 import org.apache.log4j.Logger;
 
@@ -31,7 +31,7 @@ public class FormatNodeReadings {
                 readings.add(reading);
             }
 
-            final String output = HtmlFormatter.getInstance().formatNodeReadings(readings);
+            final String output = TextFormatter.getInstance().formatNodeReadings(readings);
 
             LOGGER.info(output);
 

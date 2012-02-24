@@ -17,9 +17,5 @@ public class GeoRssFormatter {
         return instance;
     }
 
-    public GeoRssFormatter() {
-
-    }
-
 
 }

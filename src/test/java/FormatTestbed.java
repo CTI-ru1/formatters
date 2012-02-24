@@ -11,7 +11,7 @@ import eu.wisebed.wisedb.model.Testbed;
 public class FormatTestbed {
     public static void main(final String[] argv) {
         try {
-            HtmlFormatter.getInstance().format(new Testbed());
+            HtmlFormatter.getInstance().formatTestbed(new Testbed());
         } catch (NotImplementedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
