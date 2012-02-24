@@ -8,6 +8,7 @@ import eu.wisebed.wisedb.model.Link;
 import eu.wisebed.wisedb.model.Node;
 import eu.wisebed.wisedb.model.NodeCapability;
 import eu.wisebed.wisedb.model.NodeReading;
+import eu.wisebed.wisedb.model.Position;
 import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
 
@@ -120,6 +121,11 @@ public class TextFormatter implements Formatter {
             }
         }
         return output.toString();
+    }
+
+    @Override
+    public String describeNode(Node node, String requestURL, String requestURI, String nodeDescription, Position nodePos) throws NotImplementedException {
+        throw new NotImplementedException();
     }
 
     @Override

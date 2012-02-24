@@ -8,6 +8,7 @@ import eu.wisebed.wisedb.model.Link;
 import eu.wisebed.wisedb.model.Node;
 import eu.wisebed.wisedb.model.NodeCapability;
 import eu.wisebed.wisedb.model.NodeReading;
+import eu.wisebed.wisedb.model.Position;
 import eu.wisebed.wisedb.model.Testbed;
 
 import java.util.List;
@@ -41,5 +42,7 @@ public interface Formatter {
     public String formatLinks(final List<Link> links) throws NotImplementedException;
 
     public String formatLastReadings(final List<LastNodeReading> lastNodeReadings, final List<LastLinkReading> lastLinkReadings) throws NotImplementedException;
+
+    public String describeNode(final Node node, final String requestURL, final String requestURI, final String nodeDescription, final Position nodePos) throws NotImplementedException;
 
 }
