@@ -24,7 +24,7 @@ public class WisemlFormatter implements Formatter {
     /**
      * Singleton Instance.
      */
-    private static final WisemlFormatter instance = new WisemlFormatter();
+    private static WisemlFormatter instance = new WisemlFormatter();
 
     /**
      * Returns a {@link WisemlFormatter} instance.
@@ -36,65 +36,67 @@ public class WisemlFormatter implements Formatter {
     }
 
     @Override
-    public String formatTestbed(final Testbed testbed) throws NotImplementedException {
+    public final String formatTestbed(final Testbed testbed) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
+    public final String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
-        throw new NotImplementedException();
-    }
-
-
-    @Override
-    public String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String formatNodes(final List<Node> nodes) throws NotImplementedException {
+    public final String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
 
     @Override
-    public String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities)
+    public final String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public final String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public final String formatNodes(final List<Node> nodes) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+
+    @Override
+    public final String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities)
             throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatLinks(final List<Link> links) throws NotImplementedException {
+    public final String formatLinks(final List<Link> links) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatLastReadings(final List<LastNodeReading> lastNodeReadings,
-                                     final List<LastLinkReading> lastLinkReadings) throws NotImplementedException {
+    public final String formatLastReadings(final List<LastNodeReading> lastNodeReadings,
+                                           final List<LastLinkReading> lastLinkReadings)
+            throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String describeNode(final Node node, final String requestURL, final String requestURI,
-                               final String nodeDescription, final Position nodePos) throws NotImplementedException {
+    public final String describeNode(final Node node, final String requestURL, final String requestURI,
+                                     final String nodeDescription, final Position nodePos)
+            throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
-                                  final List<Node> nodes, final Map<Node, String> descriptionMap,
-                                  final Map<Node, List<NodeCapability>> capabilityMap,
-                                  final Map<Node, Origin> originMap) throws NotImplementedException {
+    public final String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
+                                        final List<Node> nodes, final Map<Node, String> descriptionMap,
+                                        final Map<Node, List<NodeCapability>> capabilityMap,
+                                        final Map<Node, Origin> originMap) throws NotImplementedException {
         throw new NotImplementedException();
     }
 }

@@ -24,15 +24,15 @@ public interface Formatter {
     /**
      * the TAB literal.
      */
-    final String TAB = "\t";
+    String TAB = "\t";
     /**
      * the NEW LINE literal.
      */
-    final String NEW_LINE = "\n";
+    String NEW_LINE = "\n";
     /**
      * the NULL literal.
      */
-    final String NULL = "null";
+    String NULL = "null";
 
     /**
      * Formats a given {@link Testbed} object to the target format.
@@ -41,7 +41,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatTestbed(final Testbed testbed) throws NotImplementedException;
+    String formatTestbed(final Testbed testbed) throws NotImplementedException;
 
     /**
      * Formats a given {@link LastNodeReading} object to the target format.
@@ -50,7 +50,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatNodeReading(final LastNodeReading lastNodeReading) throws NotImplementedException;
+    String formatNodeReading(final LastNodeReading lastNodeReading) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link Testbed} objects to the target format.
@@ -59,7 +59,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException;
+    String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link Capability} objects to the target format.
@@ -68,7 +68,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException;
+    String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link Node} objects to the target format.
@@ -77,7 +77,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatNodes(final List<Node> nodes) throws NotImplementedException;
+    String formatNodes(final List<Node> nodes) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link NodeReading} objects to the target format.
@@ -86,7 +86,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException;
+    String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link NodeCapability} objects to the target format.
@@ -95,7 +95,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities) throws NotImplementedException;
+    String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link Link} objects to the target format.
@@ -104,7 +104,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatLinks(final List<Link> links) throws NotImplementedException;
+    String formatLinks(final List<Link> links) throws NotImplementedException;
 
     /**
      * Formats the given Lists of {@link LastNodeReading} and {@link LastLinkReading} objects to the target format.
@@ -114,7 +114,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String formatLastReadings(final List<LastNodeReading> lastNodeReadings, final List<LastLinkReading> lastLinkReadings) throws NotImplementedException;
+    String formatLastReadings(final List<LastNodeReading> lastNodeReadings, final List<LastLinkReading> lastLinkReadings) throws NotImplementedException;
 
     /**
      * Returns a description of the {@link Node} object in the target format.
@@ -127,7 +127,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String describeNode(final Node node, final String requestURL, final String requestURI,
+    String describeNode(final Node node, final String requestURL, final String requestURI,
                                final String nodeDescription, final Position nodePos) throws NotImplementedException;
 
     /**
@@ -143,7 +143,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    public String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
+    String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
                                   final List<Node> nodes, final Map<Node, String> descriptionMap,
                                   final Map<Node, List<NodeCapability>> capabilityMap,
                                   final Map<Node, Origin> originMap) throws NotImplementedException;

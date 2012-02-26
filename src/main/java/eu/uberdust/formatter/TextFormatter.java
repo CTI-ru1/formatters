@@ -42,19 +42,19 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public String formatTestbed(final Testbed testbed) throws NotImplementedException {
+    public final String formatTestbed(final Testbed testbed) throws NotImplementedException {
         LOGGER.info("formatTestbed");
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
+    public final String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
         LOGGER.info("formatTestbeds");
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatLinks(final List<Link> links) throws NotImplementedException {
+    public final String formatLinks(final List<Link> links) throws NotImplementedException {
         LOGGER.info("formatLinks");
 
         final StringBuilder output = new StringBuilder();
@@ -69,7 +69,7 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException {
+    public final String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException {
         LOGGER.info("formatCapabilities");
 
         final StringBuilder output = new StringBuilder();
@@ -83,8 +83,9 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public String formatLastReadings(final List<LastNodeReading> lastNodeReadings,
-                                     final List<LastLinkReading> lastLinkReadings) throws NotImplementedException {
+    public final String formatLastReadings(final List<LastNodeReading> lastNodeReadings,
+                                           final List<LastLinkReading> lastLinkReadings)
+            throws NotImplementedException {
         LOGGER.info("formatLastReadings");
 
         final StringBuilder output = new StringBuilder();
@@ -133,21 +134,22 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public String describeNode(final Node node, final String requestURL, final String requestURI,
-                               final String nodeDescription, final Position nodePos) throws NotImplementedException {
+    public final String describeNode(final Node node, final String requestURL, final String requestURI,
+                                     final String nodeDescription, final Position nodePos)
+            throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
-                                  final List<Node> nodes, final Map<Node, String> descriptionMap,
-                                  final Map<Node, List<NodeCapability>> capabilityMap,
-                                  final Map<Node, Origin> originMap) throws NotImplementedException {
+    public final String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
+                                        final List<Node> nodes, final Map<Node, String> descriptionMap,
+                                        final Map<Node, List<NodeCapability>> capabilityMap,
+                                        final Map<Node, Origin> originMap) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatNodes(final List<Node> nodes) throws NotImplementedException {
+    public final String formatNodes(final List<Node> nodes) throws NotImplementedException {
         LOGGER.info("formatNodes");
 
         final StringBuilder output = new StringBuilder();
@@ -161,7 +163,7 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
+    public final String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
         LOGGER.info("formatNodeReadings");
 
         final StringBuilder output = new StringBuilder();
@@ -182,7 +184,7 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {
+    public final String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {
         LOGGER.info("formatNodeReading");
 
         final StringBuilder output = new StringBuilder();
@@ -201,7 +203,8 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities) throws NotImplementedException {
+    public final String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities)
+            throws NotImplementedException {
         LOGGER.info("formatUniqueLastNodeReadings");
 
         final StringBuilder output = new StringBuilder();

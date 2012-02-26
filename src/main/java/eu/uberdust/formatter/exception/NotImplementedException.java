@@ -8,3 +8,4 @@ package eu.uberdust.formatter.exception;
 public class NotImplementedException extends Exception {
 
 }
+
