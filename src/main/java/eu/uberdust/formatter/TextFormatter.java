@@ -1,7 +1,16 @@
 package eu.uberdust.formatter;
 
 import eu.uberdust.formatter.exception.NotImplementedException;
-import eu.wisebed.wisedb.model.*;
+import eu.wisebed.wisedb.model.Capability;
+import eu.wisebed.wisedb.model.LastLinkReading;
+import eu.wisebed.wisedb.model.LastNodeReading;
+import eu.wisebed.wisedb.model.Link;
+import eu.wisebed.wisedb.model.Node;
+import eu.wisebed.wisedb.model.NodeCapability;
+import eu.wisebed.wisedb.model.NodeReading;
+import eu.wisebed.wisedb.model.Origin;
+import eu.wisebed.wisedb.model.Position;
+import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -9,17 +18,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: amaxilatis
- * Date: 2/23/12
- * Time: 10:06 PM
+ * Implements the {@link Formatter} Interface and converts Wisedb Objects to Raw Text.
+ *
+ * @author amaxilat
  */
 public class TextFormatter implements Formatter {
+    /**
+     * LOGGER.
+     */
     private static final Logger LOGGER = Logger.getLogger(TextFormatter.class);
-
-
+    /**
+     * Singleton Instance.
+     */
     private static TextFormatter instance = new TextFormatter();
 
+    /**
+     * Returns a {@link TextFormatter} instance.
+     *
+     * @return the {@link TextFormatter} instance.
+     */
     public static TextFormatter getInstance() {
         return instance;
     }
@@ -116,12 +133,16 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public String describeNode(Node node, String requestURL, String requestURI, String nodeDescription, Position nodePos) throws NotImplementedException {
+    public String describeNode(final Node node, final String requestURL, final String requestURI,
+                               final String nodeDescription, final Position nodePos) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String describeTestbed(Testbed testbed, String requestURL, String requestURI, List<Node> nodes, Map<Node, String> descriptionMap, Map<Node, List<NodeCapability>> capabilityMap, Map<Node, Origin> originMap) throws NotImplementedException {
+    public String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
+                                  final List<Node> nodes, final Map<Node, String> descriptionMap,
+                                  final Map<Node, List<NodeCapability>> capabilityMap,
+                                  final Map<Node, Origin> originMap) throws NotImplementedException {
         throw new NotImplementedException();
     }
 

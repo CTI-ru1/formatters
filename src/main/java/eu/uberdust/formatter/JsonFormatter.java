@@ -1,7 +1,16 @@
 package eu.uberdust.formatter;
 
 import eu.uberdust.formatter.exception.NotImplementedException;
-import eu.wisebed.wisedb.model.*;
+import eu.wisebed.wisedb.model.Capability;
+import eu.wisebed.wisedb.model.LastLinkReading;
+import eu.wisebed.wisedb.model.LastNodeReading;
+import eu.wisebed.wisedb.model.Link;
+import eu.wisebed.wisedb.model.Node;
+import eu.wisebed.wisedb.model.NodeCapability;
+import eu.wisebed.wisedb.model.NodeReading;
+import eu.wisebed.wisedb.model.Origin;
+import eu.wisebed.wisedb.model.Position;
+import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,16 +21,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: amaxilatis
- * Date: 2/23/12
- * Time: 10:06 PM
+ * Implements the {@link Formatter} Interface and converts Wisedb Objects to Json Objects.
+ *
+ * @author amaxilat
  */
 public class JsonFormatter implements Formatter {
+    /**
+     * LOGGER.
+     */
     private static final Logger LOGGER = Logger.getLogger(JsonFormatter.class);
-
+    /**
+     * Singleton Instance.
+     */
     private static JsonFormatter instance = new JsonFormatter();
 
+    /**
+     * Returns a {@link JsonFormatter} instance.
+     *
+     * @return the {@link JsonFormatter} instance.
+     */
     public static JsonFormatter getInstance() {
         return instance;
     }
@@ -36,7 +54,9 @@ public class JsonFormatter implements Formatter {
     public String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {
         LOGGER.info("formatNodeReading");
         try {
-            if (nodeReading != null) {
+            if (nodeReading == null) {
+                return "";
+            } else {
                 final JSONObject json = new JSONObject();
                 json.put("nodeId", nodeReading.getNodeCapability().getNode().getName());
                 json.put("capabilityId", nodeReading.getNodeCapability().getCapability().getName());
@@ -53,7 +73,7 @@ public class JsonFormatter implements Formatter {
 
                 json.put("readings", jsonArray);
                 return json.toString();
-            } else return "";
+            }
         } catch (JSONException e) {
             LOGGER.error(e);
             return e.toString();
@@ -112,10 +132,13 @@ public class JsonFormatter implements Formatter {
         return json.toString();
     }
 
+    @Override
     public String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
         LOGGER.info("formatNodeReadings");
         try {
-            if (nodeReadings != null) {
+            if (nodeReadings == null) {
+                return "";
+            } else {
                 final JSONObject json = new JSONObject();
                 json.put("nodeId", nodeReadings.get(0).getCapability().getNode().getName());
                 json.put("capabilityId", nodeReadings.get(0).getCapability().getCapability().getName());
@@ -132,7 +155,7 @@ public class JsonFormatter implements Formatter {
                 }
                 json.put("readings", jsonArray);
                 return json.toString();
-            } else return "";
+            }
         } catch (JSONException e) {
             LOGGER.error(e);
             return e.toString();
@@ -177,7 +200,7 @@ public class JsonFormatter implements Formatter {
 
             // write on the HTTP response
             for (final Link link : links) {
-                JSONObject linkJson = new JSONObject();
+                final JSONObject linkJson = new JSONObject();
                 linkJson.put("linkSource", link.getSource().getName());
                 linkJson.put("linkTarget", link.getTarget().getName());
                 jsonArray.put(linkJson);
@@ -198,12 +221,16 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public String describeNode(Node node, String requestURL, String requestURI, String nodeDescription, Position nodePos) throws NotImplementedException {
+    public String describeNode(final Node node, final String requestURL, final String requestURI,
+                               final String nodeDescription, final Position nodePos) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String describeTestbed(Testbed testbed, String requestURL, String requestURI, List<Node> nodes, Map<Node, String> descriptionMap, Map<Node, List<NodeCapability>> capabilityMap, Map<Node, Origin> originMap) throws NotImplementedException {
+    public String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
+                                  final List<Node> nodes, final Map<Node, String> descriptionMap,
+                                  final Map<Node, List<NodeCapability>> capabilityMap,
+                                  final Map<Node, Origin> originMap) throws NotImplementedException {
         throw new NotImplementedException();
     }
 }

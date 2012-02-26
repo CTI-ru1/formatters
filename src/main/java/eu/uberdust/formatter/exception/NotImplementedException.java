@@ -1,10 +1,9 @@
 package eu.uberdust.formatter.exception;
 
 /**
- * Created by IntelliJ IDEA.
- * User: amaxilatis
- * Date: 2/23/12
- * Time: 10:12 PM
+ * Exception that reports a method that is not still implemented.
+ *
+ * @author amaxilat
  */
 public class NotImplementedException extends Exception {
 

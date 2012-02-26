@@ -13,7 +13,16 @@ import com.sun.syndication.io.SyndFeedOutput;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.wisebed.wisedb.Coordinate;
 import eu.wisebed.wisedb.controller.NodeCapabilityControllerImpl;
-import eu.wisebed.wisedb.model.*;
+import eu.wisebed.wisedb.model.Capability;
+import eu.wisebed.wisedb.model.LastLinkReading;
+import eu.wisebed.wisedb.model.LastNodeReading;
+import eu.wisebed.wisedb.model.Link;
+import eu.wisebed.wisedb.model.Node;
+import eu.wisebed.wisedb.model.NodeCapability;
+import eu.wisebed.wisedb.model.NodeReading;
+import eu.wisebed.wisedb.model.Origin;
+import eu.wisebed.wisedb.model.Position;
+import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -24,16 +33,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: amaxilatis
- * Date: 2/23/12
- * Time: 10:06 PM
+ * Implements the {@link Formatter} Interface and converts Wisedb Objects to GeoRss Feeds.
+ *
+ * @author amaxilat
  */
 public class GeoRssFormatter implements Formatter {
+    /**
+     * LOGGER.
+     */
     private static final Logger LOGGER = Logger.getLogger(GeoRssFormatter.class);
+    /**
+     * Singleton Instance.
+     */
+    private static GeoRssFormatter instance = new GeoRssFormatter();
 
-    private static final GeoRssFormatter instance = new GeoRssFormatter();
-
+    /**
+     * Returns a {@link GeoRssFormatter} instance.
+     *
+     * @return the {@link GeoRssFormatter} instance.
+     */
     public static GeoRssFormatter getInstance() {
         return instance;
     }
@@ -49,6 +67,7 @@ public class GeoRssFormatter implements Formatter {
 
         // set up feed and entries
         final SyndFeed feed = new SyndFeedImpl();
+        final Date nowDate = new Date();
 
         feed.setFeedType("rss_2.0");
         feed.setTitle(node.getName() + " GeoRSS feed");
@@ -60,7 +79,7 @@ public class GeoRssFormatter implements Formatter {
         final SyndEntry entry = new SyndEntryImpl();
         entry.setTitle(node.getName());
         entry.setLink(syndEntryLink);
-        entry.setPublishedDate(new Date());
+        entry.setPublishedDate(nowDate);
 
         // set entry's description (HTML list)
         final SyndContent description = new SyndContentImpl();
@@ -69,11 +88,11 @@ public class GeoRssFormatter implements Formatter {
         descriptionBuffer.append("<ul>");
         for (NodeCapability capability : NodeCapabilityControllerImpl.getInstance().list(node)) {
             descriptionBuffer.append("<li>").append(capability.getCapability().getName()).append(":");
-            if (capability.getLastNodeReading().getStringReading() != null) {
+            if (capability.getLastNodeReading().getStringReading() == null) {
+                descriptionBuffer.append(capability.getLastNodeReading().getReading());
+            } else {
                 descriptionBuffer.append(capability.getLastNodeReading().getReading()).append(",")
                         .append(capability.getLastNodeReading().getStringReading());
-            } else {
-                descriptionBuffer.append(capability.getLastNodeReading().getReading());
             }
             descriptionBuffer.append("</li>");
         }
@@ -85,8 +104,8 @@ public class GeoRssFormatter implements Formatter {
 
         // set the GeoRSS module and add it
         final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
-        if (testbed.getSetup().getCoordinateType().equals("Absolute")) {
-            com.sun.syndication.feed.module.georss.geometries.Position position =
+        if ("Absolute".equals(testbed.getSetup().getCoordinateType())) {
+            final com.sun.syndication.feed.module.georss.geometries.Position position =
                     new com.sun.syndication.feed.module.georss.geometries.Position();
 
             position.setLatitude(nodePos.getX());
@@ -137,8 +156,6 @@ public class GeoRssFormatter implements Formatter {
 
         final String baseUrl = requestURL.replace(requestURI, "");
 
-        final String syndEntryLink = new StringBuilder().append(baseUrl).append("/uberdust/rest/testbed/")
-                .append(testbed.getId()).toString();
         LOGGER.info("baseUrl : " + baseUrl);
 
         final SyndFeed feed = new SyndFeedImpl();
@@ -150,26 +167,31 @@ public class GeoRssFormatter implements Formatter {
 
 // convert testbed origin from long/lat position to xyz if needed
         Coordinate properOrigin = null;
+        final Coordinate originCoordinate = new Coordinate();
         if (!(testbed.getSetup().getCoordinateType().equals("Absolute"))) {
 // determine testbed origin by the type of coordinates given
             final Origin origin = testbed.getSetup().getOrigin();
-            final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
-                    (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
+            originCoordinate.setX((double) origin.getX());
+            originCoordinate.setY((double) origin.getY());
+            originCoordinate.setZ((double) origin.getZ());
+            originCoordinate.setPhi((double) origin.getPhi());
+            originCoordinate.setTheta((double) origin.getTheta());
             properOrigin = Coordinate.blh2xyz(originCoordinate);
         }
 
-// make an entry and it
+        final SyndEntry entry = new SyndEntryImpl();
+        final SyndContent description = new SyndContentImpl();
+        final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
+        final Coordinate nodeCoordinate = new Coordinate();
+        final Date nowDate = new Date();
         for (final Node node : nodes) {
-            final SyndEntry entry = new SyndEntryImpl();
-
-// set entry's title,link and publishing date
+            // set entry's title,link and publishing date
             entry.setTitle(node.getName());
             entry.setLink(new StringBuilder().append(baseUrl).append("/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getName()).toString());
-            entry.setPublishedDate(new Date());
+            entry.setPublishedDate(nowDate);
 
-// set entry's description (HTML list)
-            final SyndContent description = new SyndContentImpl();
+            // set entry's description (HTML list)
             final StringBuilder descriptionBuffer = new StringBuilder();
             descriptionBuffer.append("<p>").append(descriptionMap.get(node)).append("</p>");
             descriptionBuffer.append("<p><a href=\"").append(baseUrl).append("/uberdust/rest/testbed/")
@@ -192,9 +214,10 @@ public class GeoRssFormatter implements Formatter {
             entry.setDescription(description);
 
 
-// set the GeoRSS module and add it to entry
-            final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
-            if (!(testbed.getSetup().getCoordinateType().equals("Absolute"))) {
+            // set the GeoRSS module and add it to entry
+            if ("Absolute".equals(testbed.getSetup().getCoordinateType())) {
+                geoRSSModule.setPosition(new com.sun.syndication.feed.module.georss.geometries.Position(originMap.get(node).getX(), originMap.get(node).getY()));
+            } else {
                 // convert node position from xyz to long/lat
 
                 Origin npos;
@@ -204,14 +227,14 @@ public class GeoRssFormatter implements Formatter {
                     npos = testbed.getSetup().getOrigin();
                 }
 
-                final Coordinate nodeCoordinate = new Coordinate((double) npos.getX(), (double) npos.getY(),
-                        (double) npos.getZ());
+                nodeCoordinate.setX((double) npos.getX());
+                nodeCoordinate.setY((double) npos.getY());
+                nodeCoordinate.setZ((double) npos.getZ());
+
                 final Coordinate rotated = Coordinate.rotate(nodeCoordinate, properOrigin.getPhi());
                 final Coordinate absolute = Coordinate.absolute(properOrigin, rotated);
                 final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
                 geoRSSModule.setPosition(new com.sun.syndication.feed.module.georss.geometries.Position(nodePosition.getX(), nodePosition.getY()));
-            } else {
-                geoRSSModule.setPosition(new com.sun.syndication.feed.module.georss.geometries.Position(originMap.get(node).getX(), originMap.get(node).getY()));
             }
             entry.getModules().add(geoRSSModule);
             entries.add(entry);
