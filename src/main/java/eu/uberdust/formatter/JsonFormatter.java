@@ -1,16 +1,7 @@
 package eu.uberdust.formatter;
 
 import eu.uberdust.formatter.exception.NotImplementedException;
-import eu.wisebed.wisedb.model.Capability;
-import eu.wisebed.wisedb.model.LastLinkReading;
-import eu.wisebed.wisedb.model.LastNodeReading;
-import eu.wisebed.wisedb.model.Link;
-import eu.wisebed.wisedb.model.Node;
-import eu.wisebed.wisedb.model.NodeCapability;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wisedb.model.Origin;
-import eu.wisebed.wisedb.model.Position;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,10 +21,15 @@ public class JsonFormatter implements Formatter {
      * LOGGER.
      */
     private static final Logger LOGGER = Logger.getLogger(JsonFormatter.class);
+
     /**
      * Singleton Instance.
      */
     private static JsonFormatter instance = new JsonFormatter();
+    /**
+     * Base Url to use with url links.
+     */
+    private static String baseUrl = "";
 
     /**
      * Returns a {@link JsonFormatter} instance.
@@ -45,9 +41,24 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    @Override
     public final String formatTestbed(final Testbed testbed)
             throws NotImplementedException {
         LOGGER.info("formatTestbed");
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatNode(Node node) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatLink(Link link) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
@@ -83,8 +94,8 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public final String formatTestbeds(final List<Testbed> testbeds)
-            throws NotImplementedException {
+    public final String formatTestbeds(final List<Testbed> testbeds, final Map<String, Long> nodesCount,
+                                       final Map<String, Long> linksCount) throws NotImplementedException {
         LOGGER.info("formatTestbeds");
 
         final JSONArray jsonArray = new JSONArray();
@@ -102,8 +113,17 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public final String formatCapabilities(final List<Capability> capabilities)
-            throws NotImplementedException {
+    public String formatLinkCapabilities(List<LinkCapability> linkCapabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatCapability(Testbed testbed, Capability capability) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatCapabilities(Testbed testbed, List<Capability> capabilities) throws NotImplementedException {
         LOGGER.info("formatCapabilities");
         final JSONArray jsonArray = new JSONArray();
         try {
@@ -242,6 +262,16 @@ public class JsonFormatter implements Formatter {
                                         final Map<Node, List<NodeCapability>> capabilityMap,
                                         final Map<Node, Origin> originMap)
             throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String showTestbed(Testbed testbed, List<Node> nodes, List<Link> links, List<Capability> capabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String describeNodeCapabilities(List<NodeCapability> capabilities) throws NotImplementedException {
         throw new NotImplementedException();
     }
 }

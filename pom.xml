@@ -4,6 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Uberdust - Formatters</name>
+
     <groupId>uberdust</groupId>
     <artifactId>formatters</artifactId>
     <version>1.0</version>
@@ -21,6 +23,7 @@
     <properties>
         <!--Properties needed for the Project-->
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <springframework.version>2.5.5</springframework.version>
         <slf4j.version>1.6.4</slf4j.version>
     </properties>
 
@@ -32,6 +35,21 @@
                 <enabled>true</enabled>
             </snapshots>
             <layout>default</layout>
+        </repository>
+
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -46,6 +64,21 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20090211</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>3.1.0.M1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-spring</artifactId>
+            <version>5.0.0.FINAL</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geonames</groupId>
+            <artifactId>georss-rome</artifactId>
+            <version>0.9.8</version>
         </dependency>
 
     </dependencies>

@@ -13,16 +13,7 @@ import com.sun.syndication.io.SyndFeedOutput;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.wisebed.wisedb.Coordinate;
 import eu.wisebed.wisedb.controller.NodeCapabilityControllerImpl;
-import eu.wisebed.wisedb.model.Capability;
-import eu.wisebed.wisedb.model.LastLinkReading;
-import eu.wisebed.wisedb.model.LastNodeReading;
-import eu.wisebed.wisedb.model.Link;
-import eu.wisebed.wisedb.model.Node;
-import eu.wisebed.wisedb.model.NodeCapability;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wisedb.model.Origin;
-import eu.wisebed.wisedb.model.Position;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -46,6 +37,10 @@ public class GeoRssFormatter implements Formatter {
      * Singleton Instance.
      */
     private static GeoRssFormatter instance = new GeoRssFormatter();
+    /**
+     * Base Url to use with url links.
+     */
+    private static String baseUrl = "";
 
     /**
      * Returns a {@link GeoRssFormatter} instance.
@@ -54,6 +49,11 @@ public class GeoRssFormatter implements Formatter {
      */
     public static GeoRssFormatter getInstance() {
         return instance;
+    }
+
+    @Override
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     @Override
@@ -183,12 +183,14 @@ public class GeoRssFormatter implements Formatter {
             properOrigin = Coordinate.blh2xyz(originCoordinate);
         }
 
-        final SyndEntry entry = new SyndEntryImpl();
-        final SyndContent description = new SyndContentImpl();
-        final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
-        final Coordinate nodeCoordinate = new Coordinate();
+
         final Date nowDate = new Date();
         for (final Node node : nodes) {
+            final SyndEntry entry = new SyndEntryImpl();
+            final SyndContent description = new SyndContentImpl();
+            final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
+            final Coordinate nodeCoordinate = new Coordinate();
+
             // set entry's title,link and publishing date
             entry.setTitle(node.getName());
             entry.setLink(new StringBuilder().append(baseUrl).append("/rest/testbed/")
@@ -263,12 +265,33 @@ public class GeoRssFormatter implements Formatter {
     }
 
     @Override
+    public String showTestbed(Testbed testbed, List<Node> nodes, List<Link> links, List<Capability> capabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String describeNodeCapabilities(List<NodeCapability> capabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public final String formatTestbed(final Testbed testbed) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public final String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
+    public String formatNode(Node node) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatLink(Link link) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public final String formatTestbeds(final List<Testbed> testbeds, final Map<String, Long> nodesCount,
+                                       final Map<String, Long> linksCount) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
@@ -283,7 +306,17 @@ public class GeoRssFormatter implements Formatter {
     }
 
     @Override
-    public final String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException {
+    public String formatLinkCapabilities(final List<LinkCapability> linkCapabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatCapability(Testbed testbed, Capability capability) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatCapabilities(Testbed testbed, List<Capability> capabilities) throws NotImplementedException {
         throw new NotImplementedException();
     }
 

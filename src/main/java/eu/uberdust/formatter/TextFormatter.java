@@ -1,16 +1,7 @@
 package eu.uberdust.formatter;
 
 import eu.uberdust.formatter.exception.NotImplementedException;
-import eu.wisebed.wisedb.model.Capability;
-import eu.wisebed.wisedb.model.LastLinkReading;
-import eu.wisebed.wisedb.model.LastNodeReading;
-import eu.wisebed.wisedb.model.Link;
-import eu.wisebed.wisedb.model.Node;
-import eu.wisebed.wisedb.model.NodeCapability;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wisedb.model.Origin;
-import eu.wisebed.wisedb.model.Position;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -31,6 +22,10 @@ public class TextFormatter implements Formatter {
      * Singleton Instance.
      */
     private static TextFormatter instance = new TextFormatter();
+    /**
+     * Base Url to use with url links.
+     */
+    private static String baseUrl = "";
 
     /**
      * Returns a {@link TextFormatter} instance.
@@ -42,13 +37,29 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    @Override
     public final String formatTestbed(final Testbed testbed) throws NotImplementedException {
         LOGGER.info("formatTestbed");
         throw new NotImplementedException();
     }
 
     @Override
-    public final String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException {
+    public String formatNode(Node node) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatLink(Link link) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public final String formatTestbeds(final List<Testbed> testbeds, final Map<String, Long> nodesCount,
+                                       final Map<String, Long> linksCount) throws NotImplementedException {
         LOGGER.info("formatTestbeds");
         throw new NotImplementedException();
     }
@@ -69,7 +80,18 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
-    public final String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException {
+    public String formatLinkCapabilities(List<LinkCapability> linkCapabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatCapability(final Testbed testbed, final Capability capability) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatCapabilities(final Testbed testbed, final List<Capability> capabilities)
+            throws NotImplementedException {
         LOGGER.info("formatCapabilities");
 
         final StringBuilder output = new StringBuilder();
@@ -145,6 +167,16 @@ public class TextFormatter implements Formatter {
                                         final List<Node> nodes, final Map<Node, String> descriptionMap,
                                         final Map<Node, List<NodeCapability>> capabilityMap,
                                         final Map<Node, Origin> originMap) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String showTestbed(Testbed testbed, List<Node> nodes, List<Link> links, List<Capability> capabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String describeNodeCapabilities(List<NodeCapability> capabilities) throws NotImplementedException {
         throw new NotImplementedException();
     }
 

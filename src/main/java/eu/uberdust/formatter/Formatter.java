@@ -1,16 +1,7 @@
 package eu.uberdust.formatter;
 
 import eu.uberdust.formatter.exception.NotImplementedException;
-import eu.wisebed.wisedb.model.Capability;
-import eu.wisebed.wisedb.model.LastLinkReading;
-import eu.wisebed.wisedb.model.LastNodeReading;
-import eu.wisebed.wisedb.model.Link;
-import eu.wisebed.wisedb.model.Node;
-import eu.wisebed.wisedb.model.NodeCapability;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wisedb.model.Origin;
-import eu.wisebed.wisedb.model.Position;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +25,8 @@ public interface Formatter {
      */
     String NULL = "null";
 
+    void setBaseUrl(final String baseUrl);
+
     /**
      * Formats a given {@link Testbed} object to the target format.
      *
@@ -42,6 +35,24 @@ public interface Formatter {
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
     String formatTestbed(final Testbed testbed) throws NotImplementedException;
+
+    /**
+     * Formats a given {@link Node} object to the target format.
+     *
+     * @param node the {@link Node} to format.
+     * @return a string containing the formatted object.
+     * @throws NotImplementedException when not implemented the function informs the handler.
+     */
+    String formatNode(final Node node) throws NotImplementedException;
+
+    /**
+     * Formats a given {@link Link} object to the target format.
+     *
+     * @param link the {@link Link} to format.
+     * @return a string containing the formatted object.
+     * @throws NotImplementedException when not implemented the function informs the handler.
+     */
+    String formatLink(final Link link) throws NotImplementedException;
 
     /**
      * Formats a given {@link LastNodeReading} object to the target format.
@@ -59,16 +70,29 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    String formatTestbeds(final List<Testbed> testbeds) throws NotImplementedException;
+    String formatTestbeds(final List<Testbed> testbeds, final Map<String, Long> nodesCount,
+                          final Map<String, Long> linksCount) throws NotImplementedException;
+
+    /**
+     * Formats a given List of {@link LinkCapability} objects to the target format.
+     *
+     * @param linkCapabilities a list of {@link LinkCapability} objects.
+     * @return a string containing the formatted object.
+     * @throws NotImplementedException when not implemented the function informs the handler.
+     */
+    String formatLinkCapabilities(final List<LinkCapability> linkCapabilities) throws NotImplementedException;
+
+    String formatCapability(final Testbed testbed, final Capability capability) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link Capability} objects to the target format.
      *
+     * @param testbed      the testbed the capabilities belong to,
      * @param capabilities a list of {@link Capability} objects.
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    String formatCapabilities(final List<Capability> capabilities) throws NotImplementedException;
+    String formatCapabilities(final Testbed testbed, final List<Capability> capabilities) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link Node} objects to the target format.
@@ -86,6 +110,7 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
+
     String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException;
 
     /**
@@ -128,7 +153,7 @@ public interface Formatter {
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
     String describeNode(final Node node, final String requestURL, final String requestURI,
-                               final String nodeDescription, final Position nodePos) throws NotImplementedException;
+                        final String nodeDescription, final Position nodePos) throws NotImplementedException;
 
     /**
      * Returns a desctiption of the {@link Testbed} object in the target format.
@@ -144,8 +169,30 @@ public interface Formatter {
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
     String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
-                                  final List<Node> nodes, final Map<Node, String> descriptionMap,
-                                  final Map<Node, List<NodeCapability>> capabilityMap,
-                                  final Map<Node, Origin> originMap) throws NotImplementedException;
+                           final List<Node> nodes, final Map<Node, String> descriptionMap,
+                           final Map<Node, List<NodeCapability>> capabilityMap,
+                           final Map<Node, Origin> originMap) throws NotImplementedException;
+
+    /**
+     * @param testbed
+     * @param nodes
+     * @param links
+     * @param capabilities
+     * @return
+     * @throws NotImplementedException
+     */
+    String showTestbed(final Testbed testbed, final List<Node> nodes, final List<Link> links,
+                       final List<Capability> capabilities) throws NotImplementedException;
+
+
+    /**
+     * Returns a description of the {@link NodeCapability} objects in the target format.
+     *
+     * @param capabilities a list of {@link NodeCapability} objects.
+     * @return a string containing the formatted object.
+     * @throws NotImplementedException when not implemented the function informs the handler.
+     */
+    String describeNodeCapabilities(final List<NodeCapability> capabilities) throws NotImplementedException;
+
 
 }
