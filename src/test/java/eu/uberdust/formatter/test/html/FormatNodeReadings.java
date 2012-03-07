@@ -36,12 +36,7 @@ public class FormatNodeReadings {
 
             String output = HtmlFormatter.getInstance().formatNodeReadings(readings);
 
-            output = HtmlFormatter.getInstance().formatNodeReadings(readings);
-
-            System.out.println(output);
-
-
-
+            LOGGER.info(output);
 
 
         } catch (Exception e) {

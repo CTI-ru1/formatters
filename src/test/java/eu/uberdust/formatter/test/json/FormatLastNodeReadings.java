@@ -1,12 +1,11 @@
-package eu.uberdust.formatter.test.html;
+package eu.uberdust.formatter.test.json;
 
 
-import eu.uberdust.formatter.HtmlFormatter;
+import eu.uberdust.formatter.JsonFormatter;
 import eu.wisebed.wisedb.model.Capability;
 import eu.wisebed.wisedb.model.LastNodeReading;
 import eu.wisebed.wisedb.model.Node;
 import eu.wisebed.wisedb.model.NodeCapability;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
@@ -23,8 +22,6 @@ public class FormatLastNodeReadings {
     private static Logger LOGGER = Logger.getLogger(FormatLastNodeReadings.class);
 
     public static void main(final String[] argv) {
-
-        BasicConfigurator.configure();
 
         try {
 
@@ -116,7 +113,7 @@ public class FormatLastNodeReadings {
                 readings.add(cap);
             }
 
-            String output = HtmlFormatter.getInstance().formatLastNodeReadings(readings);
+            String output = JsonFormatter.getInstance().formatLastNodeReadings(readings);
 
             LOGGER.info(output);
 

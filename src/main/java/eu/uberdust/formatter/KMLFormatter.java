@@ -97,6 +97,11 @@ public class KMLFormatter implements Formatter {
     }
 
     @Override
+    public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public String formatUniqueLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
         throw new NotImplementedException();
     }

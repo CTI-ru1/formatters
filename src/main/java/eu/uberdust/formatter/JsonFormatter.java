@@ -1,5 +1,6 @@
 package eu.uberdust.formatter;
 
+import eu.uberdust.caching.Cachable;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
@@ -7,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,8 +191,63 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
-        throw new NotImplementedException();
+    @Cachable
+    public String formatLastNodeReadings(final List<NodeCapability> nodeCapabilities) throws NotImplementedException {
+        LOGGER.info("formatLastNodeReadings");
+        List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
+        JSONObject status = new JSONObject();
+        for (NodeCapability capability : nodeCapabilities) {
+            //Check if first
+            if (perNodeCapabilities.size() == 0) {
+                perNodeCapabilities.add(capability);
+            } else {
+                //check if still for the same node
+                if (capability.getNode().equals(perNodeCapabilities.get(0).getNode())) {
+                    perNodeCapabilities.add(capability);
+                } else {
+                    JSONArray readings = new JSONArray();
+                    for (final NodeCapability nodeCapability : perNodeCapabilities) {
+                        JSONObject reading = new JSONObject();
+                        try {
+                            reading.put("capability", nodeCapability.getCapability().getName());
+                            reading.put("timestamp", nodeCapability.getLastNodeReading().getTimestamp().getTime());
+                            reading.put("reading", nodeCapability.getLastNodeReading().getReading().toString());
+                            reading.put("stringReading", nodeCapability.getLastNodeReading().getStringReading());
+                        } catch (JSONException e) {
+                            LOGGER.error(e);
+                        }
+                        readings.put(reading);
+                    }
+                    try {
+                        status.put(nodeCapabilities.get(0).getNode().getName(), readings);
+                    } catch (JSONException e) {
+                        LOGGER.error(e);
+                    }
+                    perNodeCapabilities.clear();
+
+                    perNodeCapabilities.add(capability);
+                }
+            }
+        }
+        JSONArray readings = new JSONArray();
+        for (final NodeCapability nodeCapability : perNodeCapabilities) {
+            JSONObject reading = new JSONObject();
+            try {
+                reading.put("capability", nodeCapability.getCapability().getName());
+                reading.put("timestamp", nodeCapability.getLastNodeReading().getTimestamp().getTime());
+                reading.put("reading", nodeCapability.getLastNodeReading().getReading().toString());
+                reading.put("stringReading", nodeCapability.getLastNodeReading().getStringReading());
+            } catch (JSONException e) {
+                LOGGER.error(e);
+            }
+            readings.put(reading);
+        }
+        try {
+            status.put(nodeCapabilities.get(0).getNode().getName(), readings);
+        } catch (JSONException e) {
+            LOGGER.error(e);
+        }
+        return status.toString();
     }
 
     @Override
