@@ -197,6 +197,7 @@ public class JsonFormatter implements Formatter {
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
         JSONObject status = new JSONObject();
         for (NodeCapability capability : nodeCapabilities) {
+            LOGGER.info(capability);
             //Check if first
             if (perNodeCapabilities.size() == 0) {
                 perNodeCapabilities.add(capability);
@@ -207,47 +208,46 @@ public class JsonFormatter implements Formatter {
                 } else {
                     JSONArray readings = new JSONArray();
                     for (final NodeCapability nodeCapability : perNodeCapabilities) {
-                        JSONObject reading = new JSONObject();
-                        try {
-                            reading.put("capability", nodeCapability.getCapability().getName());
-                            reading.put("timestamp", nodeCapability.getLastNodeReading().getTimestamp().getTime());
-                            reading.put("reading", nodeCapability.getLastNodeReading().getReading().toString());
-                            reading.put("stringReading", nodeCapability.getLastNodeReading().getStringReading());
-                        } catch (JSONException e) {
-                            LOGGER.error(e);
-                        }
-                        readings.put(reading);
+                        readings.put(creatJsonReading(nodeCapability));
                     }
                     try {
-                        status.put(nodeCapabilities.get(0).getNode().getName(), readings);
+                        LOGGER.info("adding - " + perNodeCapabilities.get(0).getNode().getName());
+                        status.put(perNodeCapabilities.get(0).getNode().getName(), readings);
                     } catch (JSONException e) {
                         LOGGER.error(e);
                     }
                     perNodeCapabilities.clear();
-
                     perNodeCapabilities.add(capability);
                 }
             }
         }
         JSONArray readings = new JSONArray();
         for (final NodeCapability nodeCapability : perNodeCapabilities) {
-            JSONObject reading = new JSONObject();
-            try {
-                reading.put("capability", nodeCapability.getCapability().getName());
-                reading.put("timestamp", nodeCapability.getLastNodeReading().getTimestamp().getTime());
-                reading.put("reading", nodeCapability.getLastNodeReading().getReading().toString());
-                reading.put("stringReading", nodeCapability.getLastNodeReading().getStringReading());
-            } catch (JSONException e) {
-                LOGGER.error(e);
-            }
-            readings.put(reading);
+            readings.put(creatJsonReading(nodeCapability));
         }
         try {
-            status.put(nodeCapabilities.get(0).getNode().getName(), readings);
+            status.put(perNodeCapabilities.get(0).getNode().getName(), readings);
         } catch (JSONException e) {
             LOGGER.error(e);
         }
         return status.toString();
+    }
+
+    private JSONObject creatJsonReading(final NodeCapability ncap) {
+        JSONObject reading = new JSONObject();
+        try {
+            reading.put("capability", ncap.getCapability().getName());
+            reading.put("timestamp", ncap.getLastNodeReading().getTimestamp().getTime());
+            if (ncap.getLastNodeReading().getReading() != null) {
+                reading.put("reading", ncap.getLastNodeReading().getReading().toString());
+            }
+            if (ncap.getLastNodeReading().getStringReading() != null) {
+                reading.put("stringReading", ncap.getLastNodeReading().getStringReading());
+            }
+        } catch (JSONException e) {
+            LOGGER.error(e);
+        }
+        return reading;
     }
 
     @Override

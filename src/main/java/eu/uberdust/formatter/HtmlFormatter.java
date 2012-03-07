@@ -230,8 +230,9 @@ public class HtmlFormatter implements Formatter {
         LOGGER.info("formatLastNodeReadings");
         final StringBuilder output = new StringBuilder();
         output.append("<h2>Nodes</h2>").append(NEW_LINE);
+        output.append(S_TABLE);
         output.append(S_ROW).append(thCell("Node")).append(thCell("Capability")).append(thCell("Timestamp"));
-        output.append(thCell("Double Reading")).append(thCell("String Reading")).append(E_ROW);
+        output.append(thCell("Reading")).append(E_ROW);
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
         boolean outdated = true;
         for (NodeCapability capability : nodeCapabilities) {
@@ -248,31 +249,8 @@ public class HtmlFormatter implements Formatter {
                     outdated = outdated && isOutdated(capability);
                 } else {
                     for (final NodeCapability nodeCapability : perNodeCapabilities) {
-                        if (outdated) {
-                            output.append("<tr id='outdated'>");
 
-                            output.append(tdCell(nodeCapability.getNode().getName()));
-                            output.append(tdCell(nodeCapability.getCapability().getName()));
-
-                            output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
-
-                            output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
-                            output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
-
-                            output.append(E_ROW);
-                        } else {
-                            output.append("<tr id='new'>");
-
-                            output.append(tdCell(nodeCapability.getNode().getName()));
-                            output.append(tdCell(nodeCapability.getCapability().getName()));
-
-                            output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
-
-                            output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
-                            output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
-
-                            output.append(E_ROW);
-                        }
+                        output.append(createHtmlReading(nodeCapability, outdated));
 
                     }
                     perNodeCapabilities.clear();
@@ -284,32 +262,56 @@ public class HtmlFormatter implements Formatter {
             }
         }
         for (final NodeCapability nodeCapability : perNodeCapabilities) {
-            if (outdated) {
-                output.append("<tr id='outdated'>");
+            output.append(createHtmlReading(nodeCapability, outdated));
+        }
 
-                output.append(tdCell(nodeCapability.getNode().getName()));
-                output.append(tdCell(nodeCapability.getCapability().getName()));
+        output.append(E_TABLE);
+        return output.toString();
+    }
 
-                output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
+    private String createHtmlReading(final NodeCapability nodeCapability, boolean outdated) {
+        final StringBuilder output = new StringBuilder();
+        if (outdated) {
+            output.append("<tr class='outdated'>");
 
+            output.append(tdCell(urlLink(
+                    "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
+                            + "/node/" + nodeCapability.getNode().getName()
+                    , nodeCapability.getNode().getName())));
+            output.append(tdCell(urlLink(
+                    "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
+                            + "/capability/" + nodeCapability.getCapability().getName()
+                    , nodeCapability.getCapability().getName())));
+
+            output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
+            if (nodeCapability.getLastNodeReading().getReading() != null) {
                 output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
+            }
+            if (nodeCapability.getLastNodeReading().getStringReading() != null) {
                 output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
-
-                output.append(E_ROW);
-            } else {
-                output.append("<tr id='new'>");
-
-                output.append(tdCell(nodeCapability.getNode().getName()));
-                output.append(tdCell(nodeCapability.getCapability().getName()));
-
-                output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
-
-                output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
-                output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
-
-                output.append(E_ROW);
             }
 
+            output.append(E_ROW);
+        } else {
+            output.append("<tr class='new'>");
+
+            output.append(tdCell(nodeCapability.getNode().getName()));
+            output.append(tdCell(nodeCapability.getCapability().getName()));
+
+            output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
+
+            if (nodeCapability.getLastNodeReading().getReading() == null) {
+                if (nodeCapability.getLastNodeReading().getStringReading() == null) {
+                    output.append(tdCell("-"));
+                } else {
+                    output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
+                }
+            } else {
+                output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
+            }
+
+
+            output.append(E_ROW);
         }
         return output.toString();
     }
