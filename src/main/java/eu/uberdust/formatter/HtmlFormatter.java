@@ -273,52 +273,34 @@ public class HtmlFormatter implements Formatter {
         final StringBuilder output = new StringBuilder();
         if (outdated) {
             output.append("<tr class='outdated'>");
-
-            output.append(tdCell(urlLink(
-                    "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
-                            + "/node/" + nodeCapability.getNode().getName()
-                    , nodeCapability.getNode().getName())));
-            output.append(tdCell(urlLink(
-                    "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
-                            + "/capability/" + nodeCapability.getCapability().getName()
-                    , nodeCapability.getCapability().getName())));
-
-            output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
-            if (nodeCapability.getLastNodeReading().getReading() != null) {
-                output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
-            }
-            if (nodeCapability.getLastNodeReading().getStringReading() != null) {
-                output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
-            }
-
-            output.append(E_ROW);
         } else {
             output.append("<tr class='new'>");
-
-            output.append(tdCell(nodeCapability.getNode().getName()));
-            output.append(tdCell(nodeCapability.getCapability().getName()));
-
-            output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
-
-            if (nodeCapability.getLastNodeReading().getReading() == null) {
-                if (nodeCapability.getLastNodeReading().getStringReading() == null) {
-                    output.append(tdCell("-"));
-                } else {
-                    output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
-                }
-            } else {
-                output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
-            }
-
-
-            output.append(E_ROW);
         }
+
+        output.append(tdCell(urlLink(
+                "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
+                        + "/node/" + nodeCapability.getNode().getName()
+                , nodeCapability.getNode().getName())));
+        output.append(tdCell(urlLink(
+                "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
+                        + "/capability/" + nodeCapability.getCapability().getName()
+                , nodeCapability.getCapability().getName())));
+
+        output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().toString())));
+        if (nodeCapability.getLastNodeReading().getReading() != null) {
+            output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
+        }
+        if (nodeCapability.getLastNodeReading().getStringReading() != null) {
+            output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
+        }
+        output.append(E_ROW);
+
         return output.toString();
     }
 
     private boolean isOutdated(NodeCapability capability) {
         if (capability.getLastNodeReading().getTimestamp() != null) {
-            return (System.currentTimeMillis() - capability.getLastNodeReading().getTimestamp().getTime()) > 86400;
+            return (System.currentTimeMillis() - capability.getLastNodeReading().getTimestamp().getTime()) > 86400000;
         }
         return false;
     }
@@ -521,6 +503,7 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
+    @Cachable
     public final String showTestbed(final Testbed testbed, List<Node> nodes, final List<Link> links,
                                     final List<Capability> capabilities) throws NotImplementedException {
         final StringBuilder output = new StringBuilder();
