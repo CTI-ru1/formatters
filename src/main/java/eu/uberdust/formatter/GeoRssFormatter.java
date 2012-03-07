@@ -88,7 +88,8 @@ public class GeoRssFormatter implements Formatter {
         final StringBuilder descriptionBuffer = new StringBuilder();
         descriptionBuffer.append("<p>").append(nodeDescription).append("</p>");
         descriptionBuffer.append("<ul>");
-        for (NodeCapability capability : NodeCapabilityControllerImpl.getInstance().list(node)) {
+        List<NodeCapability> capabilities = NodeCapabilityControllerImpl.getInstance().list(node);
+        for (NodeCapability capability : capabilities) {
             descriptionBuffer.append("<li>").append(capability.getCapability().getName()).append(":");
             if (capability.getLastNodeReading().getStringReading() == null) {
                 descriptionBuffer.append(capability.getLastNodeReading().getReading());
@@ -297,6 +298,11 @@ public class GeoRssFormatter implements Formatter {
 
     @Override
     public final String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
         throw new NotImplementedException();
     }
 

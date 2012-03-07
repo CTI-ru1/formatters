@@ -61,6 +61,11 @@ public class WisemlFormatter implements Formatter {
         throw new NotImplementedException();
     }
 
+    @Override
+    public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
 
     @Override
     public final String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {

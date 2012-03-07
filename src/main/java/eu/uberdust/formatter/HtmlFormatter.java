@@ -1,9 +1,11 @@
 package eu.uberdust.formatter;
 
+import eu.uberdust.caching.Cachable;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,9 +86,11 @@ public class HtmlFormatter implements Formatter {
 
 
     @Override
+    @Cachable
     public String formatNode(final Node node) throws NotImplementedException {
 
         LOGGER.info("formatNode");
+        System.out.println("formatNode");
 
         final StringBuilder output = new StringBuilder();
         output.append(S_TABLE);
@@ -152,15 +156,15 @@ public class HtmlFormatter implements Formatter {
             throws NotImplementedException {
         final StringBuilder output = new StringBuilder();
         output.append(S_TABLE);
-        output.append(S_ROW).append(headerCell("Capability ID"));
-        output.append(headerCell(urlLink(
+        output.append(S_ROW).append(thCell("Capability ID"));
+        output.append(thCell(urlLink(
                 "/rest/testbed/" + testbed.getId() + "/capability/" + capability.getName(),
                 capability.getName()
         ))).append(E_ROW);
 
         output.append(S_ROW).append(tdCell("Capability Semantic Description"));
         output.append(tdCell(capability.getDescription())).append(E_ROW);
-        output.append(S_ROW).append(headerCell("List All Readings for the capability in:")).append(E_ROW);
+        output.append(S_ROW).append(thCell("List All Readings for the capability in:")).append(E_ROW);
 
         output.append(S_ROW).append(tdCell(urlLink(
                 "/rest/testbed/" + testbed.getId() + "/capability/" + capability.getName() + "/tabdelimited"
@@ -198,13 +202,15 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
+    @Cachable
     public final String formatNodeReadings(final List<NodeReading> nodeReadings) {
+        System.out.println("formatNodeReadings");
         final StringBuilder output = new StringBuilder();
 
         output.append("<table id=\"information\"").append(S_ROW);
-        output.append(headerCell("Timestamp"));
-        output.append(headerCell("Double Reading"));
-        output.append(headerCell("String Reading"));
+        output.append(thCell("Timestamp"));
+        output.append(thCell("Double Reading"));
+        output.append(thCell("String Reading"));
         output.append(E_ROW);
 
         for (final NodeReading nr : nodeReadings) {
@@ -220,6 +226,102 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
+    public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
+        LOGGER.info("formatLastNodeReadings");
+        final StringBuilder output = new StringBuilder();
+        output.append("<h2>Nodes</h2>").append(NEW_LINE);
+        output.append(S_ROW).append(thCell("Node")).append(thCell("Capability")).append(thCell("Timestamp"));
+        output.append(thCell("Double Reading")).append(thCell("String Reading")).append(E_ROW);
+        List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
+        boolean outdated = true;
+        for (NodeCapability capability : nodeCapabilities) {
+            //Check if first
+            if (perNodeCapabilities.size() == 0) {
+                perNodeCapabilities.add(capability);
+                //check if outdated
+                outdated = outdated && isOutdated(capability);
+            } else {
+                //check if still for the same node
+                if (capability.getNode().equals(perNodeCapabilities.get(0).getNode())) {
+                    perNodeCapabilities.add(capability);
+                    //check if outdated
+                    outdated = outdated && isOutdated(capability);
+                } else {
+                    for (final NodeCapability nodeCapability : perNodeCapabilities) {
+                        if (outdated) {
+                            output.append("<tr id='outdated'>");
+
+                            output.append(tdCell(nodeCapability.getNode().getName()));
+                            output.append(tdCell(nodeCapability.getCapability().getName()));
+
+                            output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
+
+                            output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
+                            output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
+
+                            output.append(E_ROW);
+                        } else {
+                            output.append("<tr id='new'>");
+
+                            output.append(tdCell(nodeCapability.getNode().getName()));
+                            output.append(tdCell(nodeCapability.getCapability().getName()));
+
+                            output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
+
+                            output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
+                            output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
+
+                            output.append(E_ROW);
+                        }
+
+                    }
+                    perNodeCapabilities.clear();
+                    outdated = true;
+                    perNodeCapabilities.add(capability);
+                    //check if outdated
+                    outdated = outdated && isOutdated(capability);
+                }
+            }
+        }
+        for (final NodeCapability nodeCapability : perNodeCapabilities) {
+            if (outdated) {
+                output.append("<tr id='outdated'>");
+
+                output.append(tdCell(nodeCapability.getNode().getName()));
+                output.append(tdCell(nodeCapability.getCapability().getName()));
+
+                output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
+
+                output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
+                output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
+
+                output.append(E_ROW);
+            } else {
+                output.append("<tr id='new'>");
+
+                output.append(tdCell(nodeCapability.getNode().getName()));
+                output.append(tdCell(nodeCapability.getCapability().getName()));
+
+                output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().getTime())));
+
+                output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
+                output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
+
+                output.append(E_ROW);
+            }
+
+        }
+        return output.toString();
+    }
+
+    private boolean isOutdated(NodeCapability capability) {
+        if (capability.getLastNodeReading().getTimestamp() != null) {
+            return (System.currentTimeMillis() - capability.getLastNodeReading().getTimestamp().getTime()) > 86400;
+        }
+        return false;
+    }
+
+    @Override
     public final String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {
         throw new NotImplementedException();
     }
@@ -231,7 +333,7 @@ public class HtmlFormatter implements Formatter {
         } else {
             final StringBuilder output = new StringBuilder();
             output.append(S_TABLE);
-            output.append(S_ROW).append(headerCell("Capabilities (" + capabilities.size() + ")"));
+            output.append(S_ROW).append(thCell("Capabilities (" + capabilities.size() + ")"));
             final StringBuilder innerTable = new StringBuilder();
             innerTable.append(S_TABLE);
             for (final NodeCapability nCap : capabilities) {
@@ -284,8 +386,8 @@ public class HtmlFormatter implements Formatter {
         } else {
             final StringBuilder output = new StringBuilder();
             output.append(S_TABLE);
-            output.append(S_ROW).append(headerCell("Capabilities"));
-            output.append(headerCell(String.valueOf(linkCapabilities.size()))).append(E_ROW);
+            output.append(S_ROW).append(thCell("Capabilities"));
+            output.append(thCell(String.valueOf(linkCapabilities.size()))).append(E_ROW);
             for (final LinkCapability capability : linkCapabilities) {
 
                 output.append(S_ROW);
@@ -481,7 +583,7 @@ public class HtmlFormatter implements Formatter {
      * @param contents the text to add inside the cell.
      * @return the HTML complete tag.
      */
-    private String headerCell(final String contents) {
+    private String thCell(final String contents) {
         final StringBuilder output = new StringBuilder();
         output.append(S_TH).append(contents).append(E_TH);
         return output.toString();

@@ -23,7 +23,6 @@
     <properties>
         <!--Properties needed for the Project-->
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <springframework.version>2.5.5</springframework.version>
         <slf4j.version>1.6.4</slf4j.version>
     </properties>
 
@@ -54,7 +53,11 @@
     </repositories>
 
     <dependencies>
-
+        <dependency>
+            <groupId>uberdust</groupId>
+            <artifactId>Cache</artifactId>
+            <version>1.0</version>
+        </dependency>
         <dependency>
             <groupId>uberdust</groupId>
             <artifactId>wisedb</artifactId>
@@ -66,33 +69,21 @@
             <version>20090211</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>3.1.0.M1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-spring</artifactId>
-            <version>5.0.0.FINAL</version>
-        </dependency>
-        <dependency>
             <groupId>org.geonames</groupId>
             <artifactId>georss-rome</artifactId>
             <version>0.9.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.6.11</version>
         </dependency>
 
     </dependencies>
 
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.jibx</groupId>
-                    <artifactId>maven-jibx-plugin</artifactId>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -102,23 +93,6 @@
                     <source>1.6</source>
                     <target>jsr14</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.5</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.3.2</version>
             </plugin>
 
             <plugin>
@@ -150,6 +124,35 @@
                 <version>2.7</version>
                 <configuration>
                     <show>private</show>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <source>1.6</source>
+                            <target>1.6</target>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <weaveDependencies>
+                        <dependency>
+                            <groupId>uberdust</groupId>
+                            <artifactId>Cache</artifactId>
+                        </dependency>
+                        <weaveDependency>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjrt</artifactId>
+                        </weaveDependency>
+                    </weaveDependencies>
                 </configuration>
             </plugin>
 

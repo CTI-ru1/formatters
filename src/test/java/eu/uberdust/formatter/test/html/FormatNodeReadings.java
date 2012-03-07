@@ -3,6 +3,7 @@ package eu.uberdust.formatter.test.html;
 
 import eu.uberdust.formatter.HtmlFormatter;
 import eu.wisebed.wisedb.model.NodeReading;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
@@ -20,6 +21,8 @@ public class FormatNodeReadings {
 
     public static void main(final String[] argv) {
 
+        BasicConfigurator.configure();
+
         try {
 
             final List<NodeReading> readings = new ArrayList<NodeReading>();
@@ -31,9 +34,14 @@ public class FormatNodeReadings {
                 readings.add(reading);
             }
 
-            final String output = HtmlFormatter.getInstance().formatNodeReadings(readings);
+            String output = HtmlFormatter.getInstance().formatNodeReadings(readings);
 
-            LOGGER.info(output);
+            output = HtmlFormatter.getInstance().formatNodeReadings(readings);
+
+            System.out.println(output);
+
+
+
 
 
         } catch (Exception e) {
@@ -43,3 +51,4 @@ public class FormatNodeReadings {
 
     }
 }
+

@@ -189,6 +189,11 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
+    public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public final String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities)
             throws NotImplementedException {
         LOGGER.info("formatUniqueLastNodeReadings");
