@@ -1,21 +1,14 @@
 package eu.uberdust.formatter;
 
+import eu.uberdust.caching.Cachable;
 import eu.uberdust.formatter.exception.NotImplementedException;
-import eu.wisebed.wisedb.model.Capability;
-import eu.wisebed.wisedb.model.LastLinkReading;
-import eu.wisebed.wisedb.model.LastNodeReading;
-import eu.wisebed.wisedb.model.Link;
-import eu.wisebed.wisedb.model.Node;
-import eu.wisebed.wisedb.model.NodeCapability;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wisedb.model.Origin;
-import eu.wisebed.wisedb.model.Position;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +23,15 @@ public class JsonFormatter implements Formatter {
      * LOGGER.
      */
     private static final Logger LOGGER = Logger.getLogger(JsonFormatter.class);
+
     /**
      * Singleton Instance.
      */
     private static JsonFormatter instance = new JsonFormatter();
+    /**
+     * Base Url to use with url links.
+     */
+    private static String baseUrl = "";
 
     /**
      * Returns a {@link JsonFormatter} instance.
@@ -45,9 +43,24 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    @Override
     public final String formatTestbed(final Testbed testbed)
             throws NotImplementedException {
         LOGGER.info("formatTestbed");
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatNode(Node node) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatLink(Link link) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
@@ -83,8 +96,8 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public final String formatTestbeds(final List<Testbed> testbeds)
-            throws NotImplementedException {
+    public final String formatTestbeds(final List<Testbed> testbeds, final Map<String, Long> nodesCount,
+                                       final Map<String, Long> linksCount) throws NotImplementedException {
         LOGGER.info("formatTestbeds");
 
         final JSONArray jsonArray = new JSONArray();
@@ -102,8 +115,17 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public final String formatCapabilities(final List<Capability> capabilities)
-            throws NotImplementedException {
+    public String formatLinkCapabilities(List<LinkCapability> linkCapabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatCapability(Testbed testbed, Capability capability) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String formatCapabilities(Testbed testbed, List<Capability> capabilities) throws NotImplementedException {
         LOGGER.info("formatCapabilities");
         final JSONArray jsonArray = new JSONArray();
         try {
@@ -166,6 +188,66 @@ public class JsonFormatter implements Formatter {
             LOGGER.error(e);
             return e.toString();
         }
+    }
+
+    @Override
+    @Cachable
+    public String formatLastNodeReadings(final List<NodeCapability> nodeCapabilities) throws NotImplementedException {
+        LOGGER.info("formatLastNodeReadings");
+        List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
+        JSONObject status = new JSONObject();
+        for (NodeCapability capability : nodeCapabilities) {
+            LOGGER.info(capability);
+            //Check if first
+            if (perNodeCapabilities.size() == 0) {
+                perNodeCapabilities.add(capability);
+            } else {
+                //check if still for the same node
+                if (capability.getNode().equals(perNodeCapabilities.get(0).getNode())) {
+                    perNodeCapabilities.add(capability);
+                } else {
+                    JSONArray readings = new JSONArray();
+                    for (final NodeCapability nodeCapability : perNodeCapabilities) {
+                        readings.put(creatJsonReading(nodeCapability));
+                    }
+                    try {
+                        LOGGER.info("adding - " + perNodeCapabilities.get(0).getNode().getName());
+                        status.put(perNodeCapabilities.get(0).getNode().getName(), readings);
+                    } catch (JSONException e) {
+                        LOGGER.error(e);
+                    }
+                    perNodeCapabilities.clear();
+                    perNodeCapabilities.add(capability);
+                }
+            }
+        }
+        JSONArray readings = new JSONArray();
+        for (final NodeCapability nodeCapability : perNodeCapabilities) {
+            readings.put(creatJsonReading(nodeCapability));
+        }
+        try {
+            status.put(perNodeCapabilities.get(0).getNode().getName(), readings);
+        } catch (JSONException e) {
+            LOGGER.error(e);
+        }
+        return status.toString();
+    }
+
+    private JSONObject creatJsonReading(final NodeCapability ncap) {
+        JSONObject reading = new JSONObject();
+        try {
+            reading.put("capability", ncap.getCapability().getName());
+            reading.put("timestamp", ncap.getLastNodeReading().getTimestamp().getTime());
+            if (ncap.getLastNodeReading().getReading() != null) {
+                reading.put("reading", ncap.getLastNodeReading().getReading().toString());
+            }
+            if (ncap.getLastNodeReading().getStringReading() != null) {
+                reading.put("stringReading", ncap.getLastNodeReading().getStringReading());
+            }
+        } catch (JSONException e) {
+            LOGGER.error(e);
+        }
+        return reading;
     }
 
     @Override
@@ -242,6 +324,16 @@ public class JsonFormatter implements Formatter {
                                         final Map<Node, List<NodeCapability>> capabilityMap,
                                         final Map<Node, Origin> originMap)
             throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String showTestbed(Testbed testbed, List<Node> nodes, List<Link> links, List<Capability> capabilities) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String describeNodeCapabilities(List<NodeCapability> capabilities) throws NotImplementedException {
         throw new NotImplementedException();
     }
 }
