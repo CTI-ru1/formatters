@@ -6,6 +6,7 @@ import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -152,6 +153,7 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
+    @Cachable
     public final String formatCapability(final Testbed testbed, final Capability capability)
             throws NotImplementedException {
         final StringBuilder output = new StringBuilder();
@@ -235,72 +237,138 @@ public class HtmlFormatter implements Formatter {
         output.append(thCell("Reading")).append(E_ROW);
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
         boolean outdated = true;
-        for (NodeCapability capability : nodeCapabilities) {
-            //Check if first
-            if (perNodeCapabilities.size() == 0) {
-                perNodeCapabilities.add(capability);
-                //check if outdated
-                outdated = outdated && isOutdated(capability);
+
+        Map<Node, List<NodeCapability>> nodeCapabilityMap = new HashMap<Node, List<NodeCapability>>();
+
+        for (final NodeCapability capability : nodeCapabilities) {
+            if (nodeCapabilityMap.containsKey(capability.getNode())) {
+                nodeCapabilityMap.get(capability.getNode()).add(capability);
             } else {
-                //check if still for the same node
-                if (capability.getNode().equals(perNodeCapabilities.get(0).getNode())) {
-                    perNodeCapabilities.add(capability);
-                    //check if outdated
-                    outdated = outdated && isOutdated(capability);
-                } else {
-                    for (final NodeCapability nodeCapability : perNodeCapabilities) {
-
-                        output.append(createHtmlReading(nodeCapability, outdated));
-
-                    }
-                    perNodeCapabilities.clear();
-                    outdated = true;
-                    perNodeCapabilities.add(capability);
-                    //check if outdated
-                    outdated = outdated && isOutdated(capability);
-                }
+                nodeCapabilityMap.put(capability.getNode(), new ArrayList<NodeCapability>());
+                nodeCapabilityMap.get(capability.getNode()).add(capability);
             }
         }
-        for (final NodeCapability nodeCapability : perNodeCapabilities) {
-            output.append(createHtmlReading(nodeCapability, outdated));
+
+        for (final Node node : nodeCapabilityMap.keySet()) {
+            int size = nodeCapabilityMap.get(node).size();
+            final StringBuilder nodeOutput = new StringBuilder();
+
+
+            for (NodeCapability nodeCapability : nodeCapabilityMap.get(node)) {
+                outdated = outdated && isOutdated(nodeCapability);
+                nodeOutput.append(S_ROW);
+                nodeOutput.append(tdCell(urlLink(
+                        "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
+                                + "/capability/" + nodeCapability.getCapability().getName()
+                        , nodeCapability.getCapability().getName())));
+
+                nodeOutput.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().toString())));
+                if (nodeCapability.getLastNodeReading().getReading() != null) {
+                    nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
+                }
+                if (nodeCapability.getLastNodeReading().getStringReading() != null) {
+                    nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
+                }
+                nodeOutput.append(E_ROW);
+            }
+
+
+            nodeOutput.insert(0, "<td  rowspan=" + (size + 1) + "> " + urlLink(
+                    "/rest/testbed/" + node.getSetup().getId()
+                            + "/node/" + node.getName()
+                    , node.getName()) + "</td>");
+
+            if (outdated) {
+                nodeOutput.insert(0, "<tr class='outdated'>");
+            } else {
+                nodeOutput.insert(0, "<tr class='new'>");
+            }
+            outdated = true;
+
+            nodeOutput.append(E_ROW);
+            output.append(nodeOutput.toString());
         }
 
         output.append(E_TABLE);
         return output.toString();
     }
 
-    private String createHtmlReading(final NodeCapability nodeCapability, boolean outdated) {
+
+    public String formatLastLinkReadings(List<LinkCapability> linkCapabilities) throws NotImplementedException {
+        LOGGER.info("formatLastLinkReadings");
         final StringBuilder output = new StringBuilder();
-        if (outdated) {
-            output.append("<tr class='outdated'>");
-        } else {
-            output.append("<tr class='new'>");
+        output.append("<h2>Links</h2>").append(NEW_LINE);
+        output.append(S_TABLE);
+        output.append(S_ROW).append(thCell("Link")).append(thCell("Capability")).append(thCell("Timestamp"));
+        output.append(thCell("Reading")).append(E_ROW);
+        List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
+        boolean outdated = true;
+
+        Map<Link, List<LinkCapability>> capabilityMap = new HashMap<Link, List<LinkCapability>>();
+
+        for (final LinkCapability capability : linkCapabilities) {
+            if (capabilityMap.containsKey(capability.getLink())) {
+                capabilityMap.get(capability.getLink()).add(capability);
+            } else {
+                capabilityMap.put(capability.getLink(), new ArrayList<LinkCapability>());
+                capabilityMap.get(capability.getLink()).add(capability);
+            }
         }
 
-        output.append(tdCell(urlLink(
-                "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
-                        + "/node/" + nodeCapability.getNode().getName()
-                , nodeCapability.getNode().getName())));
-        output.append(tdCell(urlLink(
-                "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
-                        + "/capability/" + nodeCapability.getCapability().getName()
-                , nodeCapability.getCapability().getName())));
+        for (final Link link : capabilityMap.keySet()) {
+            int size = capabilityMap.get(link).size();
+            final StringBuilder linkOutput = new StringBuilder();
 
-        output.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().toString())));
-        if (nodeCapability.getLastNodeReading().getReading() != null) {
-            output.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
-        }
-        if (nodeCapability.getLastNodeReading().getStringReading() != null) {
-            output.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
-        }
-        output.append(E_ROW);
 
+            for (LinkCapability linkCapability : capabilityMap.get(link)) {
+                outdated = outdated && isOutdated(linkCapability);
+                linkOutput.append(S_ROW);
+                linkOutput.append(tdCell(urlLink(
+                        "/rest/testbed/" + linkCapability.getLink().getSetup().getId()
+                                + "/capability/" + linkCapability.getCapability().getName()
+                        , linkCapability.getCapability().getName())));
+
+                linkOutput.append(tdCell(String.valueOf(linkCapability.getLastLinkReading().getTimestamp().toString())));
+                if (linkCapability.getLastLinkReading().getReading() != null) {
+                    linkOutput.append(tdCell(linkCapability.getLastLinkReading().getReading().toString()));
+                }
+                if (linkCapability.getLastLinkReading().getStringReading() != null) {
+                    linkOutput.append(tdCell(linkCapability.getLastLinkReading().getStringReading()));
+                }
+                linkOutput.append(E_ROW);
+            }
+
+
+            linkOutput.insert(0, "<td  rowspan=" + (size + 1) + "> " + urlLink(
+                    "/rest/testbed/" + link.getSetup().getId()
+                            + "/link/" + link.getSource().getName()
+                            + "/" + link.getTarget().getName()
+                    , "[" + link.getSource().getName() + "," + link.getTarget().getName() + "]") + "</td>");
+
+            if (outdated) {
+                linkOutput.insert(0, "<tr class='outdated'>");
+            } else {
+                linkOutput.insert(0, "<tr class='new'>");
+            }
+            outdated = true;
+
+            linkOutput.append(E_ROW);
+            output.append(linkOutput.toString());
+        }
+        output.append(E_TABLE);
         return output.toString();
     }
 
     private boolean isOutdated(NodeCapability capability) {
         if (capability.getLastNodeReading().getTimestamp() != null) {
             return (System.currentTimeMillis() - capability.getLastNodeReading().getTimestamp().getTime()) > 86400000;
+        }
+        return false;
+    }
+
+    private boolean isOutdated(LinkCapability capability) {
+        if (capability.getLastLinkReading().getTimestamp() != null) {
+            return (System.currentTimeMillis() - capability.getLastLinkReading().getTimestamp().getTime()) > 86400000;
         }
         return false;
     }
@@ -396,7 +464,7 @@ public class HtmlFormatter implements Formatter {
             final StringBuilder output = new StringBuilder();
             output.append(S_TABLE);
             output.append(S_ROW).append(tdCell(
-                    urlLink("/rest/testbed/" + testbed.getSetup().getId() + "/node", "Capabilities")
+                    urlLink("/rest/testbed/" + testbed.getSetup().getId() + "/capability", "Capabilities")
                             + " (" + capabilities.size() + ") ["
                             + urlLink("/rest/testbed/" + testbed.getSetup().getId() + "/capability/raw", "raw") + ", "
                             + urlLink("/rest/testbed/" + testbed.getSetup().getId() + "/capability/json", "json")
@@ -418,6 +486,7 @@ public class HtmlFormatter implements Formatter {
 
 
     @Override
+    @Cachable
     public final String formatNodes(final List<Node> nodes) throws NotImplementedException {
         LOGGER.info("formatNodes");
 
@@ -454,6 +523,7 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
+    @Cachable
     public final String formatLinks(final List<Link> links) throws NotImplementedException {
         final StringBuilder output = new StringBuilder();
         output.append(S_TABLE);

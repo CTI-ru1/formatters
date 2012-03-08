@@ -6,6 +6,7 @@ import eu.wisebed.wisedb.model.Capability;
 import eu.wisebed.wisedb.model.LastNodeReading;
 import eu.wisebed.wisedb.model.Node;
 import eu.wisebed.wisedb.model.NodeCapability;
+import eu.wisebed.wisedb.model.Setup;
 import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
@@ -27,15 +28,21 @@ public class FormatLastNodeReadings {
 
             final List<NodeCapability> readings = new ArrayList<NodeCapability>();
 
+            final Setup setup = new Setup();
+            setup.setId(1);
+
             final Node node1 = new Node();
             node1.setId(1);
             node1.setName("1");
+            node1.setSetup(setup);
             final Node node2 = new Node();
             node2.setId(2);
             node2.setName("2");
+            node2.setSetup(setup);
             final Node node3 = new Node();
             node3.setId(3);
             node3.setName("3");
+            node3.setSetup(setup);
 
 
             for (int i = 0; i < 4; i++) {
@@ -99,7 +106,7 @@ public class FormatLastNodeReadings {
                 capability.setName("cap" + i);
                 NodeCapability cap = new NodeCapability();
                 cap.setCapability(capability);
-                cap.setNode(node3);
+                cap.setNode(node1);
 
 
                 LastNodeReading reading = new LastNodeReading();
@@ -120,6 +127,7 @@ public class FormatLastNodeReadings {
 
         } catch (Exception e) {
             LOGGER.fatal(e);
+            e.printStackTrace();
             System.exit(-1);
         }
 

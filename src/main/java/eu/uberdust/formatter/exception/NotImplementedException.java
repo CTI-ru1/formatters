@@ -6,6 +6,9 @@ package eu.uberdust.formatter.exception;
  * @author amaxilat
  */
 public class NotImplementedException extends Exception {
-
+    @Override
+    public String getMessage() {
+        return "this method is not implemented!";
+    }
 }
 
