@@ -47,6 +47,16 @@
             <artifactId>json</artifactId>
             <version>20090211</version>
         </dependency>
+        <dependency>
+            <groupId>rome</groupId>
+            <artifactId>rome</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geonames</groupId>
+            <artifactId>georss-rome</artifactId>
+            <version>0.9.8</version>
+        </dependency>
 
     </dependencies>
 
@@ -202,6 +212,8 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.7</version>
                 <configuration>
+                    <quiet>true</quiet>
+                    <source>1.6</source>
                     <show>public</show>
                 </configuration>
             </plugin>
