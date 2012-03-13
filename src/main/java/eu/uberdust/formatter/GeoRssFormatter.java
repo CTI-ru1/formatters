@@ -157,7 +157,7 @@ public class GeoRssFormatter implements Formatter {
     public final String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
                                         final List<Node> nodes, final Map<Node, String> descriptionMap,
                                         final Map<Node, List<NodeCapability>> capabilityMap,
-                                        final Map<Node, Origin> originMap) throws NotImplementedException {
+                                        final Map<Node, Position> originMap) throws NotImplementedException {
 
         final String baseUrl = requestURL.replace(requestURI, "");
 
@@ -228,11 +228,16 @@ public class GeoRssFormatter implements Formatter {
             } else {
                 // convert node position from xyz to long/lat
 
-                Origin npos;
+                Position npos;
                 try {
                     npos = originMap.get(node);
                 } catch (NullPointerException e) {
-                    npos = testbed.getSetup().getOrigin();
+                    npos = new Position();
+                    npos.setX(testbed.getSetup().getOrigin().getX());
+                    npos.setY(testbed.getSetup().getOrigin().getY());
+                    npos.setZ(testbed.getSetup().getOrigin().getZ());
+                    npos.setPhi(testbed.getSetup().getOrigin().getPhi());
+                    npos.setTheta(testbed.getSetup().getOrigin().getTheta());
                 }
 
                 nodeCoordinate.setX((double) npos.getX());

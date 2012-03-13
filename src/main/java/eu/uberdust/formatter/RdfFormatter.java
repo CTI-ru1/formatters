@@ -121,7 +121,7 @@ public class RdfFormatter implements Formatter {
     public final String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
                                         final List<Node> nodes, final Map<Node, String> descriptionMap,
                                         final Map<Node, List<NodeCapability>> capabilityMap,
-                                        final Map<Node, Origin> originMap) throws NotImplementedException {
+                                        final Map<Node, Position> originMap) throws NotImplementedException {
         throw new NotImplementedException();
     }
 

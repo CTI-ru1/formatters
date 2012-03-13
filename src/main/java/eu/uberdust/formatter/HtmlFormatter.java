@@ -2,6 +2,7 @@ package eu.uberdust.formatter;
 
 import eu.uberdust.caching.Cachable;
 import eu.uberdust.formatter.exception.NotImplementedException;
+import eu.uberdust.formatter.util.Tag;
 import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 
@@ -95,32 +96,34 @@ public class HtmlFormatter implements Formatter {
 
         final StringBuilder output = new StringBuilder();
         output.append(S_TABLE);
-        output.append(S_ROW).append(tdCell("Node ID")).append(tdCell(urlLink(
-                "/rest/testbed/" + node.getSetup().getId() + "/node/" + node.getName()
-                , node.getName()
-        ))).append(E_ROW);
+        output.append(S_ROW).append(tdCell("Node ID")).append(tdCell(urlLink(node))).append(E_ROW);
         output.append(S_ROW).append(tdCell("GeoRSS Feed"))
-                .append(tdCell(urlLink("/rest/testbed/" + node.getSetup().getId() + "/node/" + node.getName() + "/georss"
+                .append(tdCell(urlLink(
+                        new StringBuilder()
+                                .append("/rest/testbed/").append(node.getSetup().getId())
+                                .append("/node/").append(node.getName())
+                                .append("/georss").toString()
                         , "GeoRSS Feed"
                 )))
-                .append(tdCell("<a href='http://maps.google.com/maps?q="
-                        + baseUrl
-                        + "/rest/testbed/" + node.getSetup().getId()
-                        + "/node/" + node.getName()
-                        + "/georss' > View on Google Maps </a>"
+                .append(tdCell(new StringBuilder().append("<a href='http://maps.google.com/maps?q=").append(baseUrl).append("/rest/testbed/").append(node.getSetup().getId()).append("/node/").append(node.getName()).append("/georss' > View on Google Maps </a>").toString()
                 )).append(E_ROW);
         output.append(S_ROW).append(tdCell("KML Feed"))
-                .append(tdCell(urlLink("/rest/testbed/" + node.getSetup().getId() + "/node/" + node.getName() + "/kml"
+                .append(tdCell(urlLink(new StringBuilder()
+                        .append("/rest/testbed/").append(node.getSetup().getId())
+                        .append("/node/").append(node.getName())
+                        .append("/kml").toString()
                         , "Kml Feed"
                 )))
-                .append(tdCell("<a href='http://maps.google.com/maps?q="
-                        + baseUrl
-                        + "/rest/testbed/" + node.getSetup().getId()
-                        + "/node/" + node.getName()
-                        + "/kml' > View on Google Maps </a>"
+                .append(tdCell(new StringBuilder()
+                        .append("<a href='http://maps.google.com/maps?q=").append(baseUrl)
+                        .append("/rest/testbed/").append(node.getSetup().getId())
+                        .append("/node/").append(node.getName()).append("/kml' > View on Google Maps </a>").toString()
                 )).append(E_ROW);
         output.append(S_ROW).append(tdCell("Rdf description"))
-                .append(tdCell(urlLink("/rest/testbed/" + node.getSetup().getId() + "/node/" + node.getName() + "/rdf"
+                .append(tdCell(urlLink(new StringBuilder()
+                        .append("/rest/testbed/").append(node.getSetup().getId())
+                        .append("/node/").append(node.getName())
+                        .append("/rdf").toString()
                         , "Rdf Description"
                 ))).append(E_ROW);
 
@@ -135,18 +138,12 @@ public class HtmlFormatter implements Formatter {
         final StringBuilder output = new StringBuilder();
         output.append(S_TABLE);
         output.append(S_ROW).append(tdCell(urlLink(
-                "/rest/testbed/" + link.getSetup().getId()
-                        + "/link/" + link.getSource().getName() + "/" + link.getTarget().getName()
-                , link.getSource().getName() + "," + link.getTarget().getName()
+                link
         )));
         output.append(E_ROW);
-        output.append(S_ROW).append(tdCell("Source ID")).append(tdCell(urlLink(
-                "/rest/testbed/" + link.getSource().getSetup().getId() + "/node/" + link.getSource().getName()
-                , link.getSource().getName())
+        output.append(S_ROW).append(tdCell("Source ID")).append(tdCell(urlLink(link.getSource())
         )).append(E_ROW);
-        output.append(S_ROW).append(tdCell("Target ID")).append(tdCell(urlLink(
-                "/rest/testbed/" + link.getSource().getSetup().getId() + "/node/" + link.getTarget().getName()
-                , link.getTarget().getName())
+        output.append(S_ROW).append(tdCell("Target ID")).append(tdCell(urlLink(link.getTarget())
         )).append(E_ROW);
         output.append(E_TABLE);
         return output.toString();
@@ -160,7 +157,9 @@ public class HtmlFormatter implements Formatter {
         output.append(S_TABLE);
         output.append(S_ROW).append(thCell("Capability ID"));
         output.append(thCell(urlLink(
-                "/rest/testbed/" + testbed.getId() + "/capability/" + capability.getName(),
+                new StringBuilder()
+                        .append("/rest/testbed/").append(testbed.getId())
+                        .append("/capability/").append(capability.getName()).toString(),
                 capability.getName()
         ))).append(E_ROW);
 
@@ -169,7 +168,10 @@ public class HtmlFormatter implements Formatter {
         output.append(S_ROW).append(thCell("List All Readings for the capability in:")).append(E_ROW);
 
         output.append(S_ROW).append(tdCell(urlLink(
-                "/rest/testbed/" + testbed.getId() + "/capability/" + capability.getName() + "/tabdelimited"
+                new StringBuilder()
+                        .append("/rest/testbed/").append(testbed.getId())
+                        .append("/capability/").append(capability.getName())
+                        .append("/tabdelimited").toString()
                 , "Tab Delimited Format"
         ))).append(E_ROW);
 
@@ -189,10 +191,7 @@ public class HtmlFormatter implements Formatter {
         int count = 1;
         for (final Testbed testbed : testbeds) {
             output.append(S_ROW).append(tdCell(String.valueOf(count)));
-            output.append(tdCell(urlLink(
-                    "/rest/testbed/" + testbed.getId()
-                    , testbed.getName()
-            )));
+            output.append(tdCell(urlLink(testbed)));
             output.append(tdCell("Nodes (" + nodesCount.get(testbed.getName()) + ")"));
             output.append(tdCell("Links (" + linksCount.get(testbed.getName()) + ")"));
             output.append(E_ROW);
@@ -232,7 +231,7 @@ public class HtmlFormatter implements Formatter {
         LOGGER.info("formatLastNodeReadings");
         final StringBuilder output = new StringBuilder();
         output.append("<h2>Nodes</h2>").append(NEW_LINE);
-        output.append(S_TABLE);
+        output.append("<table class='readings'>");
         output.append(S_ROW).append(thCell("Node")).append(thCell("Capability")).append(thCell("Timestamp"));
         output.append(thCell("Reading")).append(E_ROW);
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
@@ -257,31 +256,26 @@ public class HtmlFormatter implements Formatter {
             for (NodeCapability nodeCapability : nodeCapabilityMap.get(node)) {
                 outdated = outdated && isOutdated(nodeCapability);
                 nodeOutput.append(S_ROW);
-                nodeOutput.append(tdCell(urlLink(
-                        "/rest/testbed/" + nodeCapability.getNode().getSetup().getId()
-                                + "/capability/" + nodeCapability.getCapability().getName()
-                        , nodeCapability.getCapability().getName())));
+                nodeOutput.append(tdCell(urlLink(nodeCapability)));
 
                 nodeOutput.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().toString())));
                 if (nodeCapability.getLastNodeReading().getReading() != null) {
-                    nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString()));
-                }
-                if (nodeCapability.getLastNodeReading().getStringReading() != null) {
-                    nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading()));
+                    nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString(), "reading"));
+                } else if (nodeCapability.getLastNodeReading().getStringReading() != null) {
+                    nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading(), "reading"));
                 }
                 nodeOutput.append(E_ROW);
             }
 
 
-            nodeOutput.insert(0, "<td  rowspan=" + (size + 1) + "> " + urlLink(
-                    "/rest/testbed/" + node.getSetup().getId()
-                            + "/node/" + node.getName()
-                    , node.getName()) + "</td>");
+            nodeOutput.insert(0,
+                    new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
+                            .append(urlLink(node)).append("</td><td class='firstrow' colspan=3><td>").toString());
 
             if (outdated) {
                 nodeOutput.insert(0, "<tr class='outdated'>");
             } else {
-                nodeOutput.insert(0, "<tr class='new'>");
+                nodeOutput.insert(0, "<tr class='uptodate'>");
             }
             outdated = true;
 
@@ -293,12 +287,11 @@ public class HtmlFormatter implements Formatter {
         return output.toString();
     }
 
-
     public String formatLastLinkReadings(List<LinkCapability> linkCapabilities) throws NotImplementedException {
         LOGGER.info("formatLastLinkReadings");
         final StringBuilder output = new StringBuilder();
         output.append("<h2>Links</h2>").append(NEW_LINE);
-        output.append(S_TABLE);
+        output.append("<table class='readings'>");
         output.append(S_ROW).append(thCell("Link")).append(thCell("Capability")).append(thCell("Timestamp"));
         output.append(thCell("Reading")).append(E_ROW);
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
@@ -323,32 +316,24 @@ public class HtmlFormatter implements Formatter {
             for (LinkCapability linkCapability : capabilityMap.get(link)) {
                 outdated = outdated && isOutdated(linkCapability);
                 linkOutput.append(S_ROW);
-                linkOutput.append(tdCell(urlLink(
-                        "/rest/testbed/" + linkCapability.getLink().getSetup().getId()
-                                + "/capability/" + linkCapability.getCapability().getName()
-                        , linkCapability.getCapability().getName())));
+                linkOutput.append(tdCell(urlLink(linkCapability)));
 
                 linkOutput.append(tdCell(String.valueOf(linkCapability.getLastLinkReading().getTimestamp().toString())));
                 if (linkCapability.getLastLinkReading().getReading() != null) {
-                    linkOutput.append(tdCell(linkCapability.getLastLinkReading().getReading().toString()));
-                }
-                if (linkCapability.getLastLinkReading().getStringReading() != null) {
-                    linkOutput.append(tdCell(linkCapability.getLastLinkReading().getStringReading()));
+                    linkOutput.append(tdCell(linkCapability.getLastLinkReading().getReading().toString(), "reading"));
+                } else if (linkCapability.getLastLinkReading().getStringReading() != null) {
+                    linkOutput.append(tdCell(linkCapability.getLastLinkReading().getStringReading(), "reading"));
                 }
                 linkOutput.append(E_ROW);
             }
 
 
-            linkOutput.insert(0, "<td  rowspan=" + (size + 1) + "> " + urlLink(
-                    "/rest/testbed/" + link.getSetup().getId()
-                            + "/link/" + link.getSource().getName()
-                            + "/" + link.getTarget().getName()
-                    , "[" + link.getSource().getName() + "," + link.getTarget().getName() + "]") + "</td>");
+            linkOutput.insert(0, "<td  class='firstrow' rowspan=" + (size + 1) + "> " + urlLink(link) + "</td><td class='firstrow' colspan=3><td>");
 
             if (outdated) {
                 linkOutput.insert(0, "<tr class='outdated'>");
             } else {
-                linkOutput.insert(0, "<tr class='new'>");
+                linkOutput.insert(0, "<tr class='uptodate'>");
             }
             outdated = true;
 
@@ -377,6 +362,7 @@ public class HtmlFormatter implements Formatter {
     public final String formatNodeReading(final LastNodeReading nodeReading) throws NotImplementedException {
         throw new NotImplementedException();
     }
+
 
     @Override
     public final String describeNodeCapabilities(final List<NodeCapability> capabilities) throws NotImplementedException {
@@ -443,11 +429,7 @@ public class HtmlFormatter implements Formatter {
             for (final LinkCapability capability : linkCapabilities) {
 
                 output.append(S_ROW);
-                output.append(tdCell(urlLink(
-                        "/rest/testbed/" + capability.getLink().getSetup().getId()
-                                + "/capability/"
-                                + capability.getCapability().getName()
-                        , capability.getCapability().getName())));
+                output.append(tdCell(urlLink(capability)));
                 output.append(E_ROW);
             }
             output.append(E_TABLE);
@@ -484,7 +466,6 @@ public class HtmlFormatter implements Formatter {
         }
     }
 
-
     @Override
     @Cachable
     public final String formatNodes(final List<Node> nodes) throws NotImplementedException {
@@ -514,7 +495,6 @@ public class HtmlFormatter implements Formatter {
         output.append(E_TABLE);
         return output.toString();
     }
-
 
     @Override
     public final String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities)
@@ -557,6 +537,7 @@ public class HtmlFormatter implements Formatter {
         throw new NotImplementedException();
     }
 
+
     @Override
     public final String describeNode(final Node node, final String requestURL, final String requestURI,
                                      final String nodeDescription, final Position nodePos)
@@ -564,11 +545,12 @@ public class HtmlFormatter implements Formatter {
         throw new NotImplementedException();
     }
 
+
     @Override
     public final String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
                                         final List<Node> nodes, final Map<Node, String> descriptionMap,
                                         final Map<Node, List<NodeCapability>> capabilityMap,
-                                        final Map<Node, Origin> originMap) throws NotImplementedException {
+                                        final Map<Node, Position> originMap) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
@@ -639,9 +621,20 @@ public class HtmlFormatter implements Formatter {
      * @return the HTML complete tag.
      */
     private String thCell(final String contents) {
-        final StringBuilder output = new StringBuilder();
-        output.append(S_TH).append(contents).append(E_TH);
-        return output.toString();
+        return thCell(contents, "");
+    }
+
+    /**
+     * Creates an HTML table header cell with opening and closing tags.
+     *
+     * @param contents the text to add inside the cell.
+     * @return the HTML complete tag.
+     */
+    private String thCell(final String contents, final String className) {
+        Tag thTag = new Tag("th");
+        thTag.addParameter("class", className);
+        thTag.add(contents);
+        return thTag.toString();
     }
 
     /**
@@ -651,9 +644,20 @@ public class HtmlFormatter implements Formatter {
      * @return the HTML complete tag.
      */
     private String tdCell(final String contents) {
-        final StringBuilder output = new StringBuilder();
-        output.append(S_TD).append(contents).append(E_TD);
-        return output.toString();
+        return tdCell(contents, "");
+    }
+
+    /**
+     * Creates an HTML table body cell with opening and closing tags.
+     *
+     * @param contents the text to add inside the cell.
+     * @return the HTML complete tag.
+     */
+    private String tdCell(final String contents, final String className) {
+        Tag tdTag = new Tag("td");
+        tdTag.addParameter("class", className);
+        tdTag.add(contents);
+        return tdTag.toString();
     }
 
     /**
@@ -663,10 +667,47 @@ public class HtmlFormatter implements Formatter {
      * @param name the text to display.
      * @return the complete tag.
      */
-    private String urlLink(String url, String name) {
-        final StringBuilder output = new StringBuilder();
-        output.append("<a href='").append(baseUrl).append(url).append("'>").append(name).append("</a>");
-        return output.toString();
+    private String urlLink(final String url, final String name) {
+        Tag aTag = new Tag("a");
+        aTag.add(name);
+        aTag.addParameter("href", baseUrl + url);
+        return aTag.toString();
     }
+
+    private String urlLink(final Node node) {
+        Tag aTag = new Tag("a");
+        aTag.add(node.getName());
+        aTag.addParameter("href", new StringBuilder().append(baseUrl).append("/rest/testbed/").append(node.getSetup().getId()).append("/node/").append(node.getName()).toString());
+        return aTag.toString();
+    }
+
+    private String urlLink(final Link link) {
+        Tag aTag = new Tag("a");
+        aTag.add(new StringBuilder().append("[").append(link.getSource().getName()).append(",").append(link.getTarget().getName()).append("]").toString());
+        aTag.addParameter("href", new StringBuilder().append(baseUrl).append("/rest/testbed/").append(link.getSetup().getId()).append("/link/").append(link.getSource().getName()).append("/").append(link.getTarget().getName()).toString());
+        return aTag.toString();
+    }
+
+    private String urlLink(NodeCapability nodeCapability) {
+        Tag aTag = new Tag("a");
+        aTag.add(nodeCapability.getCapability().getName());
+        aTag.addParameter("href", new StringBuilder().append(baseUrl).append("/rest/testbed/").append(nodeCapability.getNode().getSetup().getId()).append("/capability/").append(nodeCapability.getCapability().getName()).toString());
+        return aTag.toString();
+    }
+
+    private String urlLink(LinkCapability linkCapability) {
+        Tag aTag = new Tag("a");
+        aTag.add(linkCapability.getCapability().getName());
+        aTag.addParameter("href", new StringBuilder().append(baseUrl).append("/rest/testbed/").append(linkCapability.getLink().getSource().getSetup().getId()).append("/capability/").append(linkCapability.getCapability().getName()).toString());
+        return aTag.toString();
+    }
+
+    private String urlLink(Testbed testbed) {
+        Tag aTag = new Tag("a");
+        aTag.add(testbed.getName());
+        aTag.addParameter("href", new StringBuilder().append(baseUrl).append("/rest/testbed/").append(testbed.getId()).toString());
+        return aTag.toString();
+    }
+
 
 }

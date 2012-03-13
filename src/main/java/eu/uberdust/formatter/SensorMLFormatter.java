@@ -141,7 +141,7 @@ public class SensorMLFormatter implements Formatter {
     }
 
     @Override
-    public String describeTestbed(Testbed testbed, String requestURL, String requestURI, List<Node> nodes, Map<Node, String> descriptionMap, Map<Node, List<NodeCapability>> capabilityMap, Map<Node, Origin> originMap) throws NotImplementedException {
+    public String describeTestbed(Testbed testbed, String requestURL, String requestURI, List<Node> nodes, Map<Node, String> descriptionMap, Map<Node, List<NodeCapability>> capabilityMap, Map<Node, Position> originMap) throws NotImplementedException {
         throw new NotImplementedException();
     }
 

@@ -176,14 +176,14 @@ public interface Formatter {
      * @param nodes          the {@link Node} object that belong to the {@link Testbed}.
      * @param descriptionMap a map with the Description String of the {@link Node} objects.
      * @param capabilityMap  a map with the {@link NodeCapability} objects of the {@link Node} objects.
-     * @param originMap      a map with the {@link Origin} objects of the {@link Node} objects.
+     * @param positionMap      a map with the {@link Origin} objects of the {@link Node} objects.
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
     String describeTestbed(final Testbed testbed, final String requestURL, final String requestURI,
                            final List<Node> nodes, final Map<Node, String> descriptionMap,
                            final Map<Node, List<NodeCapability>> capabilityMap,
-                           final Map<Node, Origin> originMap) throws NotImplementedException;
+                           final Map<Node, Position> positionMap) throws NotImplementedException;
 
     /**
      * @param testbed

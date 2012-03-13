@@ -4,7 +4,6 @@ package eu.uberdust.formatter.test.html;
 import eu.uberdust.formatter.HtmlFormatter;
 import eu.wisebed.wisedb.model.Node;
 import eu.wisebed.wisedb.model.Setup;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 /**
@@ -18,8 +17,6 @@ public class FormatNode {
 
     public static void main(final String[] argv) {
 
-        BasicConfigurator.configure();
-
         try {
 
             final Node node = new Node();
@@ -27,11 +24,7 @@ public class FormatNode {
             node.setName("name");
             node.setSetup(new Setup());
 
-            System.out.println(node.hashCode());
             String output = HtmlFormatter.getInstance().formatNode(node);
-            System.out.println(node.hashCode());
-            output = HtmlFormatter.getInstance().formatNode(node);
-
             LOGGER.info(output);
 
 
