@@ -270,13 +270,14 @@ public class HtmlFormatter implements Formatter {
 
             nodeOutput.insert(0,
                     new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
-                            .append(urlLink(node)).append("</td><td class='firstrow' colspan=3><td>").toString());
+                            .append(urlLink(node)).append("</td>").toString());
 
             if (outdated) {
                 nodeOutput.insert(0, "<tr class='outdated'>");
             } else {
                 nodeOutput.insert(0, "<tr class='uptodate'>");
             }
+            nodeOutput.insert(0,"<tr><td colspan=4><hr></td></tr>");
             outdated = true;
 
             nodeOutput.append(E_ROW);
@@ -328,13 +329,15 @@ public class HtmlFormatter implements Formatter {
             }
 
 
-            linkOutput.insert(0, "<td  class='firstrow' rowspan=" + (size + 1) + "> " + urlLink(link) + "</td><td class='firstrow' colspan=3><td>");
+            linkOutput.insert(0, "<td  class='firstrow' rowspan=" + (size + 1) + "> " + urlLink(link) + "</td>");
 
             if (outdated) {
                 linkOutput.insert(0, "<tr class='outdated'>");
             } else {
                 linkOutput.insert(0, "<tr class='uptodate'>");
             }
+            linkOutput.insert(0,"<tr><td colspan=4><hr></td></tr>");
+
             outdated = true;
 
             linkOutput.append(E_ROW);
