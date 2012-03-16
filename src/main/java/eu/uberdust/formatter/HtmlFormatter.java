@@ -210,15 +210,17 @@ public class HtmlFormatter implements Formatter {
 
         output.append("<table id=\"information\"").append(S_ROW);
         output.append(thCell("Timestamp"));
-        output.append(thCell("Double Reading"));
-        output.append(thCell("String Reading"));
+        output.append(thCell("Reading"));
         output.append(E_ROW);
 
         for (final NodeReading nr : nodeReadings) {
             output.append(S_ROW);
             output.append(tdCell(nr.getTimestamp().toString()));
-            output.append(tdCell(nr.getReading().toString()));
-            output.append(tdCell(nr.getStringReading()));
+            if (nr.getReading() != null) {
+                output.append(tdCell(nr.getReading().toString()));
+            } else {
+                output.append(tdCell(nr.getStringReading()));
+            }
             output.append(E_ROW);
         }
 
@@ -277,7 +279,7 @@ public class HtmlFormatter implements Formatter {
             } else {
                 nodeOutput.insert(0, "<tr class='uptodate'>");
             }
-            nodeOutput.insert(0,"<tr><td colspan=4><hr></td></tr>");
+            nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
             outdated = true;
 
             nodeOutput.append(E_ROW);
@@ -336,7 +338,7 @@ public class HtmlFormatter implements Formatter {
             } else {
                 linkOutput.insert(0, "<tr class='uptodate'>");
             }
-            linkOutput.insert(0,"<tr><td colspan=4><hr></td></tr>");
+            linkOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
 
             outdated = true;
 
