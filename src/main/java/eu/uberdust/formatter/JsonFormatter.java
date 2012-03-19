@@ -138,7 +138,7 @@ public class JsonFormatter implements Formatter {
         } catch (JSONException e) {
             LOGGER.error(e);
         }
-        return jsonArray.toString();
+        return obj.toString();
     }
 
     @Override
