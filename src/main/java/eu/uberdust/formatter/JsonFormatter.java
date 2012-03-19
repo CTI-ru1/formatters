@@ -127,14 +127,14 @@ public class JsonFormatter implements Formatter {
     @Override
     public String formatCapabilities(Testbed testbed, List<Capability> capabilities) throws NotImplementedException {
         LOGGER.info("formatCapabilities");
+        final JSONObject obj = new JSONObject();
         final JSONArray jsonArray = new JSONArray();
         try {
-            final JSONObject obj = new JSONObject();
             // iterate over capabilities
             for (final Capability capability : capabilities) {
-                obj.put("capabilityName", capability.getName());
-                jsonArray.put(obj);
+                jsonArray.put(capability.getName());
             }
+            obj.put("capabilities", jsonArray);
         } catch (JSONException e) {
             LOGGER.error(e);
         }
