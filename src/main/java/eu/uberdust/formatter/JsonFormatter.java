@@ -77,9 +77,9 @@ public class JsonFormatter implements Formatter {
                 json.put("capabilityId", nodeReading.getNodeCapability().getCapability().getName());
                 final JSONArray jsonArray = new JSONArray();
                 // write on the HTTP response
-                final JSONObject obj = new JSONObject();
 
                 if (nodeReading.getTimestamp() != null) {
+                    final JSONObject obj = new JSONObject();
                     obj.put("timestamp", nodeReading.getTimestamp().getTime());
                     obj.put("reading", nodeReading.getReading() == null ? NULL : nodeReading.getReading());
                     obj.put("stringReading", nodeReading.getStringReading() == null ? NULL : nodeReading.getStringReading());
@@ -102,8 +102,9 @@ public class JsonFormatter implements Formatter {
 
         final JSONArray jsonArray = new JSONArray();
         try {
-            final JSONObject obj = new JSONObject();
+
             for (final Testbed testbed : testbeds) {
+                final JSONObject obj = new JSONObject();
                 obj.put("testbedId", testbed.getId());
                 obj.put("testbedName", testbed.getName());
                 jsonArray.put(obj);
@@ -172,8 +173,9 @@ public class JsonFormatter implements Formatter {
                 json.put("capabilityId", nodeReadings.get(0).getCapability().getCapability().getName());
                 final JSONArray jsonArray = new JSONArray();
                 // write on the HTTP response
-                final JSONObject obj = new JSONObject();
+
                 for (final NodeReading reading : nodeReadings) {
+                    final JSONObject obj = new JSONObject();
                     if (reading.getTimestamp() != null) {
                         obj.put("timestamp", reading.getTimestamp().getTime());
                         obj.put("reading", reading.getReading() == null ? NULL : reading.getReading());
