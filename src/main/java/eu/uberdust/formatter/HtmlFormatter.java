@@ -492,7 +492,7 @@ public class HtmlFormatter implements Formatter {
             )).append(E_ROW);
             for (final Node node : nodes) {
                 output.append(S_ROW).append(tdCell(urlLink(
-                        "/rest/testbed/" + node.getSetup().getTestbed().getId() + "/node/" + node.getName()
+                        "/rest/testbed/" + node.getSetup().getTestbed().getId() + "/node/" + node.getName()+"/"
                         , node.getName()
                 ))).append(E_ROW);
             }
@@ -682,7 +682,7 @@ public class HtmlFormatter implements Formatter {
     private String urlLink(final Node node) {
         Tag aTag = new Tag("a");
         aTag.add(node.getName());
-        aTag.addParameter("href", new StringBuilder().append(baseUrl).append("/rest/testbed/").append(node.getSetup().getId()).append("/node/").append(node.getName()).toString());
+        aTag.addParameter("href", new StringBuilder().append(baseUrl).append("/rest/testbed/").append(node.getSetup().getId()).append("/node/").append(node.getName()).append("/").toString());
         return aTag.toString();
     }
 
