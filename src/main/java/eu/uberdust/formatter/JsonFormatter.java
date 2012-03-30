@@ -1,6 +1,5 @@
 package eu.uberdust.formatter;
 
-import eu.uberdust.caching.Cachable;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
@@ -193,7 +192,6 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    @Cachable
     public String formatLastNodeReadings(final List<NodeCapability> nodeCapabilities) throws NotImplementedException {
         LOGGER.info("formatLastNodeReadings");
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();

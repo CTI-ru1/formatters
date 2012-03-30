@@ -134,6 +134,7 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
+    @Cachable
     public String formatLink(final Link link) throws NotImplementedException {
         final StringBuilder output = new StringBuilder();
         output.append(S_TABLE);
@@ -203,7 +204,6 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
-    @Cachable
     public final String formatNodeReadings(final List<NodeReading> nodeReadings) {
         System.out.println("formatNodeReadings");
         final StringBuilder output = new StringBuilder();
@@ -443,6 +443,7 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
+    @Cachable
     public final String formatCapabilities(final Testbed testbed, final List<Capability> capabilities)
             throws NotImplementedException {
         if (capabilities.isEmpty()) {
@@ -560,7 +561,6 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
-    @Cachable
     public final String showTestbed(final Testbed testbed, List<Node> nodes, final List<Link> links,
                                     final List<Capability> capabilities) throws NotImplementedException {
         final StringBuilder output = new StringBuilder();

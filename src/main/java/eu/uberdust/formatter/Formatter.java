@@ -1,6 +1,5 @@
 package eu.uberdust.formatter;
 
-import eu.uberdust.caching.Cachable;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.wisebed.wisedb.model.*;
 
@@ -44,7 +43,6 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    @Cachable
     String formatNode(final Node node) throws NotImplementedException;
 
     /**
