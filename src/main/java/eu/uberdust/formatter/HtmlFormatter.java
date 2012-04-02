@@ -493,7 +493,7 @@ public class HtmlFormatter implements Formatter {
             )).append(E_ROW);
             for (final Node node : nodes) {
                 output.append(S_ROW).append(tdCell(urlLink(
-                        "/rest/testbed/" + node.getSetup().getTestbed().getId() + "/node/" + node.getName()+"/"
+                        "/rest/testbed/" + node.getSetup().getTestbed().getId() + "/node/" + node.getName() + "/"
                         , node.getName()
                 ))).append(E_ROW);
             }
