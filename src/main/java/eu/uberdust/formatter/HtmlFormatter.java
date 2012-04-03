@@ -7,7 +7,6 @@ import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -239,24 +238,45 @@ public class HtmlFormatter implements Formatter {
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
         boolean outdated = true;
 
-        Map<Node, List<NodeCapability>> nodeCapabilityMap = new HashMap<Node, List<NodeCapability>>();
+        Node node = nodeCapabilities.get(0).getNode();
+        StringBuilder nodeOutput = new StringBuilder();
+        int size = 0;
 
-        for (final NodeCapability capability : nodeCapabilities) {
-            if (nodeCapabilityMap.containsKey(capability.getNode())) {
-                nodeCapabilityMap.get(capability.getNode()).add(capability);
-            } else {
-                nodeCapabilityMap.put(capability.getNode(), new ArrayList<NodeCapability>());
-                nodeCapabilityMap.get(capability.getNode()).add(capability);
-            }
-        }
-
-        for (final Node node : nodeCapabilityMap.keySet()) {
-            int size = nodeCapabilityMap.get(node).size();
-            final StringBuilder nodeOutput = new StringBuilder();
-
-
-            for (NodeCapability nodeCapability : nodeCapabilityMap.get(node)) {
+        for (NodeCapability nodeCapability : nodeCapabilities) {
+            if (nodeCapability.getNode().equals(node)) {
                 outdated = outdated && isOutdated(nodeCapability);
+                size++;
+                nodeOutput.append(S_ROW);
+                nodeOutput.append(tdCell(urlLink(nodeCapability)));
+
+                nodeOutput.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().toString())));
+                if (nodeCapability.getLastNodeReading().getReading() != null) {
+                    nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString(), "reading"));
+                } else if (nodeCapability.getLastNodeReading().getStringReading() != null) {
+                    nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading(), "reading"));
+                }
+                nodeOutput.append(E_ROW);
+
+            } else {
+                nodeOutput.insert(0,
+                        new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
+                                .append(urlLink(node)).append("</td>").toString());
+
+                if (outdated) {
+                    nodeOutput.insert(0, "<tr class='outdated'>");
+                } else {
+                    nodeOutput.insert(0, "<tr class='uptodate'>");
+                }
+                nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
+                outdated = true;
+                size = 0;
+
+                nodeOutput.append(E_ROW);
+                output.append(nodeOutput.toString());
+                nodeOutput=new StringBuilder();
+                node=nodeCapability.getNode();
+
+                size++;
                 nodeOutput.append(S_ROW);
                 nodeOutput.append(tdCell(urlLink(nodeCapability)));
 
@@ -268,22 +288,6 @@ public class HtmlFormatter implements Formatter {
                 }
                 nodeOutput.append(E_ROW);
             }
-
-
-            nodeOutput.insert(0,
-                    new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
-                            .append(urlLink(node)).append("</td>").toString());
-
-            if (outdated) {
-                nodeOutput.insert(0, "<tr class='outdated'>");
-            } else {
-                nodeOutput.insert(0, "<tr class='uptodate'>");
-            }
-            nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
-            outdated = true;
-
-            nodeOutput.append(E_ROW);
-            output.append(nodeOutput.toString());
         }
 
         output.append(E_TABLE);
@@ -297,54 +301,61 @@ public class HtmlFormatter implements Formatter {
         output.append("<table class='readings'>");
         output.append(S_ROW).append(thCell("Link")).append(thCell("Capability")).append(thCell("Timestamp"));
         output.append(thCell("Reading")).append(E_ROW);
-        List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
         boolean outdated = true;
 
-        Map<Link, List<LinkCapability>> capabilityMap = new HashMap<Link, List<LinkCapability>>();
+        Link link= linkCapabilities.get(0).getLink();
+        StringBuilder nodeOutput = new StringBuilder();
+        int size = 0;
 
-        for (final LinkCapability capability : linkCapabilities) {
-            if (capabilityMap.containsKey(capability.getLink())) {
-                capabilityMap.get(capability.getLink()).add(capability);
-            } else {
-                capabilityMap.put(capability.getLink(), new ArrayList<LinkCapability>());
-                capabilityMap.get(capability.getLink()).add(capability);
-            }
-        }
-
-        for (final Link link : capabilityMap.keySet()) {
-            int size = capabilityMap.get(link).size();
-            final StringBuilder linkOutput = new StringBuilder();
-
-
-            for (LinkCapability linkCapability : capabilityMap.get(link)) {
+        for (LinkCapability linkCapability : linkCapabilities) {
+            if (linkCapability.getLink().equals(link)) {
                 outdated = outdated && isOutdated(linkCapability);
-                linkOutput.append(S_ROW);
-                linkOutput.append(tdCell(urlLink(linkCapability)));
+                size++;
+                nodeOutput.append(S_ROW);
+                nodeOutput.append(tdCell(urlLink(linkCapability)));
 
-                linkOutput.append(tdCell(String.valueOf(linkCapability.getLastLinkReading().getTimestamp().toString())));
+                nodeOutput.append(tdCell(String.valueOf(linkCapability.getLastLinkReading().getTimestamp().toString())));
                 if (linkCapability.getLastLinkReading().getReading() != null) {
-                    linkOutput.append(tdCell(linkCapability.getLastLinkReading().getReading().toString(), "reading"));
+                    nodeOutput.append(tdCell(linkCapability.getLastLinkReading().getReading().toString(), "reading"));
                 } else if (linkCapability.getLastLinkReading().getStringReading() != null) {
-                    linkOutput.append(tdCell(linkCapability.getLastLinkReading().getStringReading(), "reading"));
+                    nodeOutput.append(tdCell(linkCapability.getLastLinkReading().getStringReading(), "reading"));
                 }
-                linkOutput.append(E_ROW);
-            }
+                nodeOutput.append(E_ROW);
 
-
-            linkOutput.insert(0, "<td  class='firstrow' rowspan=" + (size + 1) + "> " + urlLink(link) + "</td>");
-
-            if (outdated) {
-                linkOutput.insert(0, "<tr class='outdated'>");
             } else {
-                linkOutput.insert(0, "<tr class='uptodate'>");
+                nodeOutput.insert(0,
+                        new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
+                                .append(urlLink(link)).append("</td>").toString());
+
+                if (outdated) {
+                    nodeOutput.insert(0, "<tr class='outdated'>");
+                } else {
+                    nodeOutput.insert(0, "<tr class='uptodate'>");
+                }
+                nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
+                outdated = true;
+                size = 0;
+
+                nodeOutput.append(E_ROW);
+                output.append(nodeOutput.toString());
+                nodeOutput=new StringBuilder();
+                link=linkCapability.getLink();
+
+                size++;
+                nodeOutput.append(S_ROW);
+                nodeOutput.append(tdCell(urlLink(linkCapability)));
+
+                nodeOutput.append(tdCell(String.valueOf(linkCapability.getLastLinkReading().getTimestamp().toString())));
+                if (linkCapability.getLastLinkReading().getReading() != null) {
+                    nodeOutput.append(tdCell(linkCapability.getLastLinkReading().getReading().toString(), "reading"));
+                } else if (linkCapability.getLastLinkReading().getStringReading() != null) {
+                    nodeOutput.append(tdCell(linkCapability.getLastLinkReading().getStringReading(), "reading"));
+                }
+                nodeOutput.append(E_ROW);
             }
-            linkOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
-
-            outdated = true;
-
-            linkOutput.append(E_ROW);
-            output.append(linkOutput.toString());
         }
+        
+
         output.append(E_TABLE);
         return output.toString();
     }
