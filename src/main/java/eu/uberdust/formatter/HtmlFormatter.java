@@ -268,10 +268,12 @@ public class HtmlFormatter implements Formatter {
                     nodeOutput.insert(0, "<tr class='uptodate'>");
                 }
                 nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
+                nodeOutput.append(E_ROW);
+
                 outdated = true;
                 size = 0;
+                outdated = outdated && isOutdated(nodeCapability);
 
-                nodeOutput.append(E_ROW);
                 output.append(nodeOutput.toString());
                 nodeOutput=new StringBuilder();
                 node=nodeCapability.getNode();
