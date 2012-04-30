@@ -150,6 +150,11 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
+    public String formatNodeReading(NodeReading nodeReading) throws NotImplementedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     @Cachable
     public final String formatCapability(final Testbed testbed, final Capability capability)
             throws NotImplementedException {
@@ -192,8 +197,12 @@ public class HtmlFormatter implements Formatter {
         for (final Testbed testbed : testbeds) {
             output.append(S_ROW).append(tdCell(String.valueOf(count)));
             output.append(tdCell(urlLink(testbed)));
-            output.append(tdCell("Nodes (" + nodesCount.get(testbed.getName()) + ")"));
-            output.append(tdCell("Links (" + linksCount.get(testbed.getName()) + ")"));
+            if (nodesCount!=null) {
+                output.append(tdCell("Nodes (" + nodesCount.get(testbed.getName()) + ")"));
+            }
+            if (linksCount!=null) {
+                output.append(tdCell("Links (" + linksCount.get(testbed.getName()) + ")"));
+            }
             output.append(E_ROW);
             count++;
 
@@ -243,6 +252,7 @@ public class HtmlFormatter implements Formatter {
             int size = 0;
 
             for (NodeCapability nodeCapability : nodeCapabilities) {
+
                 if (nodeCapability.getNode().equals(node)) {
                     outdated = outdated && isOutdated(nodeCapability);
                     size++;
@@ -250,12 +260,12 @@ public class HtmlFormatter implements Formatter {
                     nodeOutput.append(tdCell(urlLink(nodeCapability)));
 
                     nodeOutput.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().toString())));
-                    if (nodeCapability.getLastNodeReading().getStringReading() != null) {
+                    if ((nodeCapability.getLastNodeReading().getStringReading() != null) && (!"".equals(nodeCapability.getLastNodeReading().getStringReading()))) {
                         nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading(), "reading"));
                     } else if (nodeCapability.getLastNodeReading().getReading() != null) {
                         nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString(), "reading"));
                     }
-                    nodeOutput.append(E_ROW);
+//                    nodeOutput.append(E_ROW);
 
                 } else {
                     nodeOutput.insert(0,
@@ -275,6 +285,7 @@ public class HtmlFormatter implements Formatter {
                     outdated = outdated && isOutdated(nodeCapability);
 
                     output.append(nodeOutput.toString());
+
                     nodeOutput = new StringBuilder();
                     node = nodeCapability.getNode();
 
@@ -283,14 +294,20 @@ public class HtmlFormatter implements Formatter {
                     nodeOutput.append(tdCell(urlLink(nodeCapability)));
 
                     nodeOutput.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().toString())));
-                    if (nodeCapability.getLastNodeReading().getReading() != null) {
-                        nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString(), "reading"));
-                    } else if (nodeCapability.getLastNodeReading().getStringReading() != null) {
+                    if ((nodeCapability.getLastNodeReading().getStringReading() != null) && (!"".equals(nodeCapability.getLastNodeReading().getStringReading()))) {
                         nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading(), "reading"));
+                    } else if (nodeCapability.getLastNodeReading().getReading() != null) {
+                        nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString(), "reading"));
                     }
-                    nodeOutput.append(E_ROW);
+//                    nodeOutput.append(E_ROW);
                 }
             }
+            nodeOutput.insert(0,
+                    new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
+                            .append(urlLink(node)).append("</td>").toString());
+            nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
+
+            output.append(nodeOutput.toString());
         }
 
         output.append(E_TABLE);

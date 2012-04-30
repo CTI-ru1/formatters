@@ -51,6 +51,11 @@ public class RdfFormatter implements Formatter {
     }
 
     @Override
+    public String formatNodeReading(NodeReading nodeReading) throws NotImplementedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public final String formatTestbeds(final List<Testbed> testbeds, final Map<String, Long> nodesCount,
                                        final Map<String, Long> linksCount) throws NotImplementedException {
         throw new NotImplementedException();

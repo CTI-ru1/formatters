@@ -58,6 +58,22 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
+    public String formatNodeReading(NodeReading nodeReading) throws NotImplementedException {
+        LOGGER.info("formatNodeReading");
+
+        final StringBuilder output = new StringBuilder();
+
+        output.append(nodeReading.getCapability().getNode().getName()).append(" ");
+        output.append(nodeReading.getCapability().getCapability().getName()).append(" ");
+        output.append(nodeReading.getTimestamp()).append(" ");
+        output.append(nodeReading.getReading()).append(" ");
+        output.append(nodeReading.getStringReading()).append(" ");
+        output.append(NEW_LINE);
+
+        return output.toString();
+    }
+
+    @Override
     public final String formatTestbeds(final List<Testbed> testbeds, final Map<String, Long> nodesCount,
                                        final Map<String, Long> linksCount) throws NotImplementedException {
         LOGGER.info("formatTestbeds");

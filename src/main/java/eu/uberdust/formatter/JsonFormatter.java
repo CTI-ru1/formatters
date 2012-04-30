@@ -64,6 +64,11 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
+    public String formatNodeReading(NodeReading nodeReading) throws NotImplementedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public final String formatNodeReading(final LastNodeReading nodeReading)
             throws NotImplementedException {
         LOGGER.info("formatNodeReading");

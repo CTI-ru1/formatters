@@ -4,18 +4,14 @@ package eu.uberdust.formatter.test.html;
 import eu.uberdust.formatter.HtmlFormatter;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.wisebed.wisedb.HibernateUtil;
-import eu.wisebed.wisedb.controller.LinkCapabilityControllerImpl;
 import eu.wisebed.wisedb.controller.NodeCapabilityControllerImpl;
 import eu.wisebed.wisedb.controller.TestbedControllerImpl;
-import eu.wisebed.wisedb.model.LinkCapability;
 import eu.wisebed.wisedb.model.NodeCapability;
 import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
 import org.hibernate.Transaction;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,18 +50,17 @@ public class ShowTestbedStatusControllerTest {
         long start1 = System.currentTimeMillis();
 
         // a specific testbed is requested by testbed Id
-        int testbedId = 4;
+        int testbedId = 1;
 
         LOGGER.info("--------- Get Testbed id: " + (System.currentTimeMillis() - start1));
         start1 = System.currentTimeMillis();
 
         // look up testbed
         final Testbed testbed = TestbedControllerImpl.getInstance().getByID(testbedId);
-        
+
         LOGGER.info("got testbed " + testbed);
 
         LOGGER.info("--------- Get Testbed: " + (System.currentTimeMillis() - start1));
-
 
 
         start1 = System.currentTimeMillis();
@@ -80,32 +75,35 @@ public class ShowTestbedStatusControllerTest {
         } catch (NotImplementedException e) {
             nodeCaps = "";
         }
-        LOGGER.info("--------- format last node readings: " + (System.currentTimeMillis() - start1));
-
-        start1 = System.currentTimeMillis();
-        // get a list of link statistics from testbed
-        final List<LinkCapability> linkCapabilities = LinkCapabilityControllerImpl.getInstance().list(testbed.getSetup());
-        LOGGER.info("--------- List link capabilities: " + (System.currentTimeMillis() - start1));
-
-
-        // Prepare data to pass to jsp
-        final Map<String, Object> refData = new HashMap<String, Object>();
-        refData.put("testbed", testbed);
-        refData.put("lastNodeReadings", nodeCaps);
-
-
-        try {
-            start1 = System.currentTimeMillis();
-            refData.put("lastLinkReadings", HtmlFormatter.getInstance().formatLastLinkReadings(linkCapabilities));
-            LOGGER.info("--------- format link Capabilites: " + (System.currentTimeMillis() - start1));
-        } catch (NotImplementedException e) {
-            LOGGER.error(e);
-        }
+        System.out.println("<body>");
+        System.out.println(nodeCaps);
+        System.out.println("</body>");
+//        LOGGER.info("--------- format last node readings: " + (System.currentTimeMillis() - start1));
 //
-//        LOGGER.info("--------- Total time: " + (System.currentTimeMillis() - start));
-//        refData.put("time", String.valueOf((System.currentTimeMillis() - start)));
-//        LOGGER.info("prepared map");
+//        start1 = System.currentTimeMillis();
+//        // get a list of link statistics from testbed
+//        final List<LinkCapability> linkCapabilities = LinkCapabilityControllerImpl.getInstance().list(testbed.getSetup());
+//        LOGGER.info("--------- List link capabilities: " + (System.currentTimeMillis() - start1));
 //
+//
+//        // Prepare data to pass to jsp
+//        final Map<String, Object> refData = new HashMap<String, Object>();
+//        refData.put("testbed", testbed);
+//        refData.put("lastNodeReadings", nodeCaps);
+//
+//
+//        try {
+//            start1 = System.currentTimeMillis();
+//            refData.put("lastLinkReadings", HtmlFormatter.getInstance().formatLastLinkReadings(linkCapabilities));
+//            LOGGER.info("--------- format link Capabilites: " + (System.currentTimeMillis() - start1));
+//        } catch (NotImplementedException e) {
+//            LOGGER.error(e);
+//        }
+////
+////        LOGGER.info("--------- Total time: " + (System.currentTimeMillis() - start));
+////        refData.put("time", String.valueOf((System.currentTimeMillis() - start)));
+////        LOGGER.info("prepared map");
+////
 
 
     }

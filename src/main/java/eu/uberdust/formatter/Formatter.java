@@ -55,6 +55,15 @@ public interface Formatter {
     String formatLink(final Link link) throws NotImplementedException;
 
     /**
+     * Formats a given {@link NodeReading} object to the target format.
+     *
+     * @param nodeReading a {@link NodeReading} object.
+     * @return a string containing the formatted object.
+     * @throws NotImplementedException when not implemented the function informs the handler.
+     */
+    String formatNodeReading(final NodeReading nodeReading) throws NotImplementedException;
+
+    /**
      * Formats a given {@link LastNodeReading} object to the target format.
      *
      * @param lastNodeReading a {@link LastNodeReading} object.

@@ -62,6 +62,11 @@ public class KMLFormatter implements Formatter {
     }
 
     @Override
+    public String formatNodeReading(NodeReading nodeReading) throws NotImplementedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public String formatNodeReading(LastNodeReading lastNodeReading) throws NotImplementedException {
         throw new NotImplementedException();
     }
