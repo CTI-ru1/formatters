@@ -197,10 +197,10 @@ public class HtmlFormatter implements Formatter {
         for (final Testbed testbed : testbeds) {
             output.append(S_ROW).append(tdCell(String.valueOf(count)));
             output.append(tdCell(urlLink(testbed)));
-            if (nodesCount!=null) {
+            if (nodesCount != null) {
                 output.append(tdCell("Nodes (" + nodesCount.get(testbed.getName()) + ")"));
             }
-            if (linksCount!=null) {
+            if (linksCount != null) {
                 output.append(tdCell("Links (" + linksCount.get(testbed.getName()) + ")"));
             }
             output.append(E_ROW);
@@ -234,6 +234,11 @@ public class HtmlFormatter implements Formatter {
 
         output.append(E_TABLE);
         return output.toString();
+    }
+
+    @Override
+    public String formatLinkReadings(List<LinkReading> linkReadings) throws NotImplementedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -557,6 +562,7 @@ public class HtmlFormatter implements Formatter {
 
             )).append(E_ROW);
             for (final Link link : links) {
+                LOGGER.info("linkid" + link.getId());
                 output.append(S_ROW).append(tdCell(urlLink(
                         "/rest/testbed/" + link.getSetup().getTestbed().getId() + "/link/"
                                 + link.getSource().getName() + "/" + link.getTarget().getName()

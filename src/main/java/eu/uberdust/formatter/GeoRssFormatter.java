@@ -312,6 +312,11 @@ public class GeoRssFormatter implements Formatter {
     }
 
     @Override
+    public String formatLinkReadings(List<LinkReading> linkReadings) throws NotImplementedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
         throw new NotImplementedException();
     }

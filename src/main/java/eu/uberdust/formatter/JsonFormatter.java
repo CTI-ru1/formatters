@@ -197,6 +197,11 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
+    public String formatLinkReadings(List<LinkReading> linkReadings) throws NotImplementedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public String formatLastNodeReadings(final List<NodeCapability> nodeCapabilities) throws NotImplementedException {
         LOGGER.info("formatLastNodeReadings");
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();

@@ -232,6 +232,27 @@ public class TextFormatter implements Formatter {
     }
 
     @Override
+    public String formatLinkReadings(List<LinkReading> linkReadings) throws NotImplementedException {
+        LOGGER.info("formatNodeReadings");
+
+        final StringBuilder output = new StringBuilder();
+
+        for (final LinkReading lr : linkReadings) {
+
+            output.append(lr.getTimestamp().getTime()).append(TAB);
+            if (lr.getReading() != null) {
+                output.append(lr.getReading().toString()).append(TAB);
+            }
+            if (lr.getStringReading() != null) {
+                output.append(lr.getStringReading()).append(TAB);
+            }
+            output.append(NEW_LINE);
+        }
+
+        return output.toString();
+    }
+
+    @Override
     public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
         LOGGER.info("formatLastNodeReadings");
         final StringBuilder output = new StringBuilder();

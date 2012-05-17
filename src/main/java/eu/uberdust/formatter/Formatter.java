@@ -123,6 +123,16 @@ public interface Formatter {
     String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException;
 
     /**
+     * Formats a given List of {@link LinkReading} objects to the target format.
+     *
+     * @param linkReadings a list of {@link LinkReading} objects.
+     * @return a string containing the formatted object.
+     * @throws NotImplementedException when not implemented the function informs the handler.
+     */
+
+    String formatLinkReadings(final List<LinkReading> linkReadings) throws NotImplementedException;
+
+    /**
      * Formats a given List of {@link NodeReading} objects to the target format.
      *
      * @param nodeCapabilities a list of {@link Node} objects.
@@ -183,7 +193,7 @@ public interface Formatter {
      * @param nodes          the {@link Node} object that belong to the {@link Testbed}.
      * @param descriptionMap a map with the Description String of the {@link Node} objects.
      * @param capabilityMap  a map with the {@link NodeCapability} objects of the {@link Node} objects.
-     * @param positionMap      a map with the {@link Origin} objects of the {@link Node} objects.
+     * @param positionMap    a map with the {@link Origin} objects of the {@link Node} objects.
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
