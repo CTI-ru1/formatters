@@ -167,7 +167,7 @@ public class HtmlFormatter implements Formatter {
                         .append("/capability/").append(capability.getName()).toString(),
                 capability.getName()
         ))).append(E_ROW);
-
+        output.append(S_ROW).append(tdCell("Unit of Measurement")).append(tdCell(capability.getUnit())).append(E_ROW);
         output.append(S_ROW).append(tdCell("Capability Semantic Description"));
         output.append(tdCell(capability.getDescription())).append(E_ROW);
         output.append(S_ROW).append(thCell("List All Readings for the capability in:")).append(E_ROW);
@@ -268,7 +268,8 @@ public class HtmlFormatter implements Formatter {
                     if ((nodeCapability.getLastNodeReading().getStringReading() != null) && (!"".equals(nodeCapability.getLastNodeReading().getStringReading()))) {
                         nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading(), "reading"));
                     } else if (nodeCapability.getLastNodeReading().getReading() != null) {
-                        nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString(), "reading"));
+                        nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString() + " " +
+                                nodeCapability.getCapability().getUnit(), "reading"));
                     }
 //                    nodeOutput.append(E_ROW);
 
@@ -302,7 +303,8 @@ public class HtmlFormatter implements Formatter {
                     if ((nodeCapability.getLastNodeReading().getStringReading() != null) && (!"".equals(nodeCapability.getLastNodeReading().getStringReading()))) {
                         nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading(), "reading"));
                     } else if (nodeCapability.getLastNodeReading().getReading() != null) {
-                        nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString(), "reading"));
+                        nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString() + " " +
+                                nodeCapability.getCapability().getUnit(), "reading"));
                     }
 //                    nodeOutput.append(E_ROW);
                 }
@@ -450,6 +452,20 @@ public class HtmlFormatter implements Formatter {
                 innerTable.append(tdCell(urlLink(
                         basicUrl + "/live"
                         , "Live")));
+                if (nCap.getNode().getName().contains("virtual")) {
+                    innerTable.append(tdCell("<div id='" + nCap.getCapability().getName() + "-1'>" +
+                            "<script type='text/javascript'> " +
+                            " document.getElementById('" + nCap.getCapability().getName() + "-1').innerHTML " +
+                            "= create_qrcode('" + baseUrl+basicUrl + "/insert/timestamp/0/reading/1/" + "');" +
+                            "</script></div>"));
+                }
+                if (nCap.getNode().getName().contains("virtual")) {
+                    innerTable.append(tdCell("<div id='" + nCap.getCapability().getName() + "-0'>" +
+                            "<script type='text/javascript'> " +
+                            " document.getElementById('" + nCap.getCapability().getName() + "-0').innerHTML " +
+                            "= create_qrcode('" + baseUrl+basicUrl + "/insert/timestamp/0/reading/0/" + "');" +
+                            "</script></div>"));
+                }
                 innerTable.append(E_ROW);
             }
             innerTable.append(E_TABLE);

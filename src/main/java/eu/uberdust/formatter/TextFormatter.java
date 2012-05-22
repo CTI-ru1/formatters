@@ -256,20 +256,23 @@ public class TextFormatter implements Formatter {
     public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
         LOGGER.info("formatLastNodeReadings");
         final StringBuilder output = new StringBuilder();
-        for (NodeCapability capability : nodeCapabilities) {
-            if (capability.getLastNodeReading().getTimestamp() != null) {
-                output.append(capability.getNode().getName()).append(TAB);
-                output.append(capability.getCapability().getName()).append(TAB);
+        if (nodeCapabilities != null) {
+            Node node = nodeCapabilities.get(0).getNode();
+            StringBuilder nodeOutput = new StringBuilder();
+            int size = 0;
 
-                output.append(capability.getLastNodeReading().getTimestamp().getTime()).append(TAB);
-                if (capability.getLastNodeReading().getReading() != null) {
-                    output.append(capability.getLastNodeReading().getReading()).append(TAB);
+            for (NodeCapability nodeCapability : nodeCapabilities) {
+                nodeOutput.append(nodeCapability.getNode().getName()).append(TAB);
+                nodeOutput.append(nodeCapability.getCapability().getName()).append(TAB);
+                nodeOutput.append(nodeCapability.getLastNodeReading().getTimestamp().getTime()).append(TAB);
+                if ((nodeCapability.getLastNodeReading().getStringReading() != null) && (!"".equals(nodeCapability.getLastNodeReading().getStringReading()))) {
+                    nodeOutput.append(nodeCapability.getLastNodeReading().getStringReading());
+                } else if (nodeCapability.getLastNodeReading().getReading() != null) {
+                    nodeOutput.append(nodeCapability.getLastNodeReading().getReading().toString() + " " + nodeCapability.getCapability().getUnit());
                 }
-                if (capability.getLastNodeReading().getStringReading() != null) {
-                    output.append(capability.getLastNodeReading().getStringReading()).append(TAB);
-                }
-                output.append(NEW_LINE);
+                nodeOutput.append(NEW_LINE);
             }
+            output.append(nodeOutput.toString());
         }
         return output.toString();
     }
