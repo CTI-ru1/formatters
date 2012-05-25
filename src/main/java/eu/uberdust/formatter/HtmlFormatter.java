@@ -452,20 +452,20 @@ public class HtmlFormatter implements Formatter {
                 innerTable.append(tdCell(urlLink(
                         basicUrl + "/live"
                         , "Live")));
-                if (nCap.getNode().getName().contains("virtual")) {
-                    innerTable.append(tdCell("<div id='" + nCap.getCapability().getName() + "-1'>" +
-                            "<script type='text/javascript'> " +
-                            " document.getElementById('" + nCap.getCapability().getName() + "-1').innerHTML " +
-                            "= create_qrcode('" + baseUrl+basicUrl + "/insert/timestamp/0/reading/1/" + "');" +
-                            "</script></div>"));
-                }
-                if (nCap.getNode().getName().contains("virtual")) {
-                    innerTable.append(tdCell("<div id='" + nCap.getCapability().getName() + "-0'>" +
-                            "<script type='text/javascript'> " +
-                            " document.getElementById('" + nCap.getCapability().getName() + "-0').innerHTML " +
-                            "= create_qrcode('" + baseUrl+basicUrl + "/insert/timestamp/0/reading/0/" + "');" +
-                            "</script></div>"));
-                }
+//                if (nCap.getNode().getName().contains("virtual")) {
+//                    innerTable.append(tdCell("<div id='" + nCap.getCapability().getName() + "-1'>" +
+//                            "<script type='text/javascript'> " +
+//                            " document.getElementById('" + nCap.getCapability().getName() + "-1').innerHTML " +
+//                            "= create_qrcode('" + baseUrl+basicUrl + "/insert/timestamp/0/reading/1/" + "');" +
+//                            "</script></div>"));
+//                }
+//                if (nCap.getNode().getName().contains("virtual")) {
+//                    innerTable.append(tdCell("<div id='" + nCap.getCapability().getName() + "-0'>" +
+//                            "<script type='text/javascript'> " +
+//                            " document.getElementById('" + nCap.getCapability().getName() + "-0').innerHTML " +
+//                            "= create_qrcode('" + baseUrl+basicUrl + "/insert/timestamp/0/reading/0/" + "');" +
+//                            "</script></div>"));
+//                }
                 innerTable.append(E_ROW);
             }
             innerTable.append(E_TABLE);
@@ -632,14 +632,20 @@ public class HtmlFormatter implements Formatter {
                 .append(tdCell(String.valueOf(testbed.getTimeZone().getDisplayName()))).append(E_ROW);
         output.append(S_ROW).append(tdCell("Testbed URL"))
                 .append(tdCell(String.valueOf(testbed.getUrl()))).append(E_ROW);
-        output.append(S_ROW).append(tdCell("Testbed SNAA URL"))
-                .append(tdCell(String.valueOf(testbed.getSnaaUrl()))).append(E_ROW);
-        output.append(S_ROW).append(tdCell("Testbed RS URL"))
-                .append(tdCell(String.valueOf(testbed.getRsUrl()))).append(E_ROW);
-        output.append(S_ROW).append(tdCell("Testbed Session Management URL "))
-                .append(tdCell(String.valueOf(testbed.getSessionUrl()))).append(E_ROW);
-        output.append(S_ROW).append(tdCell("Testbed Federated Testbed"))
-                .append(tdCell(String.valueOf(testbed.getFederated()))).append(E_ROW);
+        if (testbed.getSnaaUrl() != null) {
+            output.append(S_ROW).append(tdCell("Testbed SNAA URL"))
+                    .append(tdCell(String.valueOf(testbed.getSnaaUrl()))).append(E_ROW);
+        }
+        if (testbed.getRsUrl() != null) {
+            output.append(S_ROW).append(tdCell("Testbed RS URL"))
+                    .append(tdCell(String.valueOf(testbed.getRsUrl()))).append(E_ROW);
+        }
+        if (testbed.getSessionUrl() != null) {
+            output.append(S_ROW).append(tdCell("Testbed Session Management URL "))
+                    .append(tdCell(String.valueOf(testbed.getSessionUrl()))).append(E_ROW);
+            output.append(S_ROW).append(tdCell("Testbed Federated Testbed"))
+                    .append(tdCell(String.valueOf(testbed.getFederated()))).append(E_ROW);
+        }
         output.append(S_ROW).append(tdCell("Testbed Status Page"))
                 .append(tdCell(urlLink("/rest/testbed/" + testbed.getId() + "/status", "status page"))).append(E_ROW);
         output.append(S_ROW).append(tdCell("Testbed GeoRSS feed"))
