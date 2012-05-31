@@ -245,10 +245,12 @@ public class HtmlFormatter implements Formatter {
     public String formatLastNodeReadings(List<NodeCapability> nodeCapabilities) throws NotImplementedException {
         LOGGER.info("formatLastNodeReadings");
         final StringBuilder output = new StringBuilder();
-        output.append("<h2>Nodes</h2>").append(NEW_LINE);
-        output.append("<table class='readings'>");
-        output.append(S_ROW).append(thCell("Node")).append(thCell("Capability")).append(thCell("Timestamp"));
-        output.append(thCell("Reading")).append(E_ROW);
+        final StringBuilder header = new StringBuilder();
+        header.append("<h2>Nodes</h2>").append(NEW_LINE);
+        header.append("<table class='readings'>");
+        header.append(S_ROW).append(thCell("Node")).append(thCell("Capability")).append(thCell("Timestamp"));
+        header.append(thCell("Reading")).append(E_ROW);
+
         List<NodeCapability> perNodeCapabilities = new ArrayList<NodeCapability>();
         boolean outdated = true;
         if (nodeCapabilities != null) {
@@ -271,26 +273,31 @@ public class HtmlFormatter implements Formatter {
                         nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString() + " " +
                                 nodeCapability.getCapability().getUnit(), "reading"));
                     }
-//                    nodeOutput.append(E_ROW);
+                    nodeOutput.append(E_ROW);
 
                 } else {
                     nodeOutput.insert(0,
                             new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
-                                    .append(urlLink(node)).append("</td>").toString());
+                                    .append(urlLink(node)).append(E_TD).append(E_ROW).toString());
 
                     if (outdated) {
                         nodeOutput.insert(0, "<tr class='outdated'>");
                     } else {
                         nodeOutput.insert(0, "<tr class='uptodate'>");
                     }
-                    nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
-                    nodeOutput.append(E_ROW);
+                    nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>\n");
+//                    nodeOutput.append(E_ROW);
+
+                    if (!outdated) {
+                        output.insert(0, nodeOutput.toString());
+                    } else {
+                        output.append(nodeOutput.toString());
+                    }
 
                     outdated = true;
                     size = 0;
                     outdated = outdated && isOutdated(nodeCapability);
 
-                    output.append(nodeOutput.toString());
 
                     nodeOutput = new StringBuilder();
                     node = nodeCapability.getNode();
@@ -301,10 +308,10 @@ public class HtmlFormatter implements Formatter {
 
                     nodeOutput.append(tdCell(String.valueOf(nodeCapability.getLastNodeReading().getTimestamp().toString())));
                     if ((nodeCapability.getLastNodeReading().getStringReading() != null) && (!"".equals(nodeCapability.getLastNodeReading().getStringReading()))) {
-                        nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading(), "reading"));
+                        nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getStringReading(), "reading")).append(E_ROW);
                     } else if (nodeCapability.getLastNodeReading().getReading() != null) {
                         nodeOutput.append(tdCell(nodeCapability.getLastNodeReading().getReading().toString() + " " +
-                                nodeCapability.getCapability().getUnit(), "reading"));
+                                nodeCapability.getCapability().getUnit(), "reading")).append(E_ROW);
                     }
 //                    nodeOutput.append(E_ROW);
                 }
@@ -312,10 +319,11 @@ public class HtmlFormatter implements Formatter {
             nodeOutput.insert(0,
                     new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
                             .append(urlLink(node)).append("</td>").toString());
-            nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
+            nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>\n");
 
             output.append(nodeOutput.toString());
         }
+        output.insert(0, header.toString());
 
         output.append(E_TABLE);
         return output.toString();
@@ -324,10 +332,7 @@ public class HtmlFormatter implements Formatter {
     public String formatLastLinkReadings(List<LinkCapability> linkCapabilities) throws NotImplementedException {
         LOGGER.info("formatLastLinkReadings");
         final StringBuilder output = new StringBuilder();
-        output.append("<h2>Links</h2>").append(NEW_LINE);
-        output.append("<table class='readings'>");
-        output.append(S_ROW).append(thCell("Link")).append(thCell("Capability")).append(thCell("Timestamp"));
-        output.append(thCell("Reading")).append(E_ROW);
+
         boolean outdated = true;
 
         if (linkCapabilities != null) {
@@ -351,6 +356,8 @@ public class HtmlFormatter implements Formatter {
                     nodeOutput.append(E_ROW);
 
                 } else {
+                    outdated = outdated && isOutdated(linkCapability);
+
                     nodeOutput.insert(0,
                             new StringBuilder().append("<td  class='firstrow' rowspan=").append(size + 1).append("> ")
                                     .append(urlLink(link)).append("</td>").toString());
@@ -360,12 +367,17 @@ public class HtmlFormatter implements Formatter {
                     } else {
                         nodeOutput.insert(0, "<tr class='uptodate'>");
                     }
-                    nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>");
-                    outdated = true;
+                    nodeOutput.insert(0, "<tr><td colspan=4><hr></td></tr>\n");
+
                     size = 0;
 
                     nodeOutput.append(E_ROW);
-                    output.append(nodeOutput.toString());
+                    if (!outdated) {
+                        output.insert(0, nodeOutput.toString());
+                    } else {
+                        output.append(nodeOutput.toString());
+                    }
+                    outdated = true;
                     nodeOutput = new StringBuilder();
                     link = linkCapability.getLink();
 
@@ -383,6 +395,13 @@ public class HtmlFormatter implements Formatter {
                 }
             }
         }
+        output.insert(0, thCell("Reading")).append(E_ROW);
+        output.insert(0, new StringBuilder().append(S_ROW)
+                .append(thCell("Link"))
+                .append(thCell("Capability"))
+                .append(thCell("Timestamp")).toString());
+        output.insert(0, "<table class='readings'>");
+        output.insert(0, "<h2>Links</h2>" + NEW_LINE);
 
         output.append(E_TABLE);
         return output.toString();
