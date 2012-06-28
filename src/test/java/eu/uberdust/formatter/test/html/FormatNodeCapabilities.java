@@ -4,13 +4,11 @@ package eu.uberdust.formatter.test.html;
 import eu.uberdust.formatter.HtmlFormatter;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.wisebed.wisedb.HibernateUtil;
-import eu.wisebed.wisedb.controller.CapabilityControllerImpl;
+import eu.wisebed.wisedb.controller.NodeCapabilityControllerImpl;
 import eu.wisebed.wisedb.controller.NodeControllerImpl;
-import eu.wisebed.wisedb.controller.NodeReadingControllerImpl;
 import eu.wisebed.wisedb.controller.SetupControllerImpl;
-import eu.wisebed.wisedb.model.Capability;
 import eu.wisebed.wisedb.model.Node;
-import eu.wisebed.wisedb.model.NodeReading;
+import eu.wisebed.wisedb.model.NodeCapability;
 import eu.wisebed.wisedb.model.Setup;
 import org.apache.log4j.Logger;
 import org.hibernate.Transaction;
@@ -23,7 +21,7 @@ import java.util.List;
  * Date: 2/23/12
  * Time: 10:16 PM
  */
-public class FormatNodeReadings {
+public class FormatNodeCapabilities {
     private static Logger LOGGER = Logger.getLogger(FormatNodeCapabilities.class);
 
     public static void main(final String[] argv) {
@@ -50,9 +48,8 @@ public class FormatNodeReadings {
     private static void runTest() throws NotImplementedException {
         final Setup setup = SetupControllerImpl.getInstance().getByID(1);
         Node node = NodeControllerImpl.getInstance().getByName("urn:wisebed:ctitestbed:virtual:0.I.9");
-        Capability capability = CapabilityControllerImpl.getInstance().getByID("urn:wisebed:node:capability:pir");
-        final List<NodeReading> readings = NodeReadingControllerImpl.getInstance().listNodeReadings(node, capability, 10);
-        LOGGER.info(HtmlFormatter.getInstance().formatNodeReadings(readings));
+        final List<NodeCapability> capabilities = NodeCapabilityControllerImpl.getInstance().list(node);
+        LOGGER.info(HtmlFormatter.getInstance().describeNodeCapabilities(capabilities));
 
     }
 }
