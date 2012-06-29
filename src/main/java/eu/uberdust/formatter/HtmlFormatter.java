@@ -597,7 +597,6 @@ public class HtmlFormatter implements Formatter {
 
             )).append(E_ROW);
             for (final Link link : links) {
-                LOGGER.info("linkid" + link.getId());
                 output.append(S_ROW).append(tdCell(urlLink(
                         "/rest/testbed/" + link.getSetup().getTestbed().getId() + "/link/"
                                 + link.getSource().getName() + "/" + link.getTarget().getName()
