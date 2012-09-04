@@ -66,12 +66,12 @@ public class SensorMLFormatter implements Formatter {
     }
 
     @Override
-    public String formatTestbed(Testbed testbed) throws NotImplementedException {
+    public Object formatTestbed(Testbed testbed) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatNode(Node node) throws NotImplementedException {
+    public Object formatNode(Node node) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
@@ -116,7 +116,7 @@ public class SensorMLFormatter implements Formatter {
     }
 
     @Override
-    public String formatNodeReadings(List<NodeReading> nodeReadings) throws NotImplementedException {
+    public Object formatNodeReadings(List<NodeReading> nodeReadings) throws NotImplementedException {
         throw new NotImplementedException();
     }
 

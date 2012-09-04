@@ -34,16 +34,16 @@ public interface Formatter {
      * @return a string containing the formatted object.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    String formatTestbed(final Testbed testbed) throws NotImplementedException;
+    Object formatTestbed(final Testbed testbed) throws NotImplementedException;
 
     /**
      * Formats a given {@link Node} object to the target format.
      *
      * @param node the {@link Node} to format.
-     * @return a string containing the formatted object.
+     * @return an object containing the formatted data.
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
-    String formatNode(final Node node) throws NotImplementedException;
+    Object formatNode(final Node node) throws NotImplementedException;
 
     /**
      * Formats a given {@link Link} object to the target format.
@@ -120,7 +120,7 @@ public interface Formatter {
      * @throws NotImplementedException when not implemented the function informs the handler.
      */
 
-    String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException;
+    Object formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException;
 
     /**
      * Formats a given List of {@link LinkReading} objects to the target format.

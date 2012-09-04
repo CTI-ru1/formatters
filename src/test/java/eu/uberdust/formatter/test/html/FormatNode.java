@@ -24,7 +24,7 @@ public class FormatNode {
             node.setName("name");
             node.setSetup(new Setup());
 
-            String output = HtmlFormatter.getInstance().formatNode(node);
+            String output = (String) HtmlFormatter.getInstance().formatNode(node);
             LOGGER.info(output);
 
 

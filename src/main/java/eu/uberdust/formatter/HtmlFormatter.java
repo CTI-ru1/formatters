@@ -81,14 +81,14 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
-    public final String formatTestbed(final Testbed testbed) throws NotImplementedException {
+    public final Object formatTestbed(final Testbed testbed) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
 
     @Override
     @Cachable
-    public String formatNode(final Node node) throws NotImplementedException {
+    public Object formatNode(final Node node) throws NotImplementedException {
 
         LOGGER.info("formatNode");
         System.out.println("formatNode");
@@ -212,7 +212,7 @@ public class HtmlFormatter implements Formatter {
     }
 
     @Override
-    public final String formatNodeReadings(final List<NodeReading> nodeReadings) {
+    public final Object formatNodeReadings(final List<NodeReading> nodeReadings) {
         System.out.println("formatNodeReadings");
         final StringBuilder output = new StringBuilder();
 

@@ -47,14 +47,14 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public final String formatTestbed(final Testbed testbed)
+    public final Object formatTestbed(final Testbed testbed)
             throws NotImplementedException {
         LOGGER.info("formatTestbed");
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatNode(Node node) throws NotImplementedException {
+    public Object formatNode(Node node) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
@@ -165,7 +165,7 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public final String formatNodeReadings(final List<NodeReading> nodeReadings)
+    public final Object formatNodeReadings(final List<NodeReading> nodeReadings)
             throws NotImplementedException {
         LOGGER.info("formatNodeReadings");
         try {

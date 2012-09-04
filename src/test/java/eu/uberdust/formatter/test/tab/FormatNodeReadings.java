@@ -31,7 +31,7 @@ public class FormatNodeReadings {
                 readings.add(reading);
             }
 
-            final String output = TextFormatter.getInstance().formatNodeReadings(readings);
+            final String output = (String) TextFormatter.getInstance().formatNodeReadings(readings);
 
             LOGGER.info(output);
 

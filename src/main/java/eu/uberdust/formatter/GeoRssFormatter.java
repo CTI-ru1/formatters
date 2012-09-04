@@ -281,12 +281,12 @@ public class GeoRssFormatter implements Formatter {
     }
 
     @Override
-    public final String formatTestbed(final Testbed testbed) throws NotImplementedException {
+    public final Object formatTestbed(final Testbed testbed) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
     @Override
-    public String formatNode(Node node) throws NotImplementedException {
+    public Object formatNode(Node node) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
@@ -307,7 +307,7 @@ public class GeoRssFormatter implements Formatter {
     }
 
     @Override
-    public final String formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
+    public final Object formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
         throw new NotImplementedException();
     }
 
