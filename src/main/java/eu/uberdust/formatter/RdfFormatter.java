@@ -13,7 +13,9 @@ import eu.wisebed.wiseml.model.scenario.Timestamp;
 import eu.wisebed.wiseml.model.setup.Data;
 import eu.wisebed.wiseml.model.trace.Trace;
 import eu.wisebed.wiserdf.WiseML2RDF;
+import eu.wisebed.wiserdf.rdfNodeExporter;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -186,44 +188,25 @@ public class RdfFormatter implements Formatter {
 
     @Override
     public final Object formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
-        Node wisedbNode = nodeReadings.get(0).getCapability().getNode();
-        //create new wiseml
-        WiseML wiseML = new WiseML();
-        wiseML.setVersion("1.0");
-        wiseML.setXmlns("http://wisebed.eu/ns/wiseml/1.0");
 
-        //init wisemlNODE
+
+        rdfNodeExporter ndf = new rdfNodeExporter("http://uberdust.cti.gr");
+        Node wisedbNode = nodeReadings.get(0).getCapability().getNode();
+        Data d = new Data();
+        d.setKey(nodeReadings.get(0).getCapability().getCapability().getDescription());
+
+        if (nodeReadings.get(0).getReading() == null) {
+            d.setValue(nodeReadings.get(0).getStringReading());
+        } else {
+            d.setValue(nodeReadings.get(0).getReading().toString());
+        }
         List<Capability> capabilityList = new LinkedList<Capability>();
         capabilityList.add(nodeReadings.get(0).getCapability().getCapability());
         eu.wisebed.wiseml.model.setup.Node wisemlNode = initWisemlNode(wisedbNode, capabilityList);
 
-        //init wisemlTRACE
-        Trace trace = initTraceWithReadings(wisedbNode, wisemlNode, nodeReadings);
-        wiseML.setTrace(trace);
-
-        //init wisemlSETUP
-        eu.wisebed.wiseml.model.setup.Setup setup;
-        setup = initSetup(wisedbNode.getSetup());
-        List<eu.wisebed.wiseml.model.setup.Node> nodeList = new LinkedList<eu.wisebed.wiseml.model.setup.Node>();
-        nodeList.add(wisemlNode);
-        setup.setNodes(nodeList);
-        wiseML.setSetup(setup);
-
-        //init wisemlSCENARIO
-        wiseML.setScenario(new Scenario());
-
-
-        //create a converter
-        WiseML2RDF ml2RDF = new WiseML2RDF(wiseML);
-        Model wiseModel;
-        wiseModel = ModelFactory.createDefaultModel();
-        wiseModel.setNsPrefix("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-        wiseModel.setNsPrefix("wiserdf", uri);
-        //generate RDF
-        ml2RDF.exportRDF(wiseModel, uri);
-
-        return wiseModel;
-
+        DateTime ts = new DateTime(nodeReadings.get(0).getTimestamp());
+        String room = nodeReadings.get(1).getStringReading();
+        return ndf.exportNode(wisemlNode, d, ts, room);
     }
 
     @Override
