@@ -190,8 +190,13 @@ public class RdfFormatter implements Formatter {
     public final Object formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
 
 
-        rdfNodeExporter ndf = new rdfNodeExporter("http://uberdust.cti.gr");
+        rdfNodeExporter ndf = new rdfNodeExporter("http://uberdust.cti.gr/rest/testbed/1");
+
         Node wisedbNode = nodeReadings.get(0).getCapability().getNode();
+        List<Capability> capabilityList = new LinkedList<Capability>();
+        capabilityList.add(nodeReadings.get(0).getCapability().getCapability());
+        eu.wisebed.wiseml.model.setup.Node wisemlNode = initWisemlNode(wisedbNode, capabilityList);
+
         Data d = new Data();
         d.setKey(nodeReadings.get(0).getCapability().getCapability().getDescription());
 
@@ -200,9 +205,6 @@ public class RdfFormatter implements Formatter {
         } else {
             d.setValue(nodeReadings.get(0).getReading().toString());
         }
-        List<Capability> capabilityList = new LinkedList<Capability>();
-        capabilityList.add(nodeReadings.get(0).getCapability().getCapability());
-        eu.wisebed.wiseml.model.setup.Node wisemlNode = initWisemlNode(wisedbNode, capabilityList);
 
         DateTime ts = new DateTime(nodeReadings.get(0).getTimestamp());
         String room = nodeReadings.get(1).getStringReading();
