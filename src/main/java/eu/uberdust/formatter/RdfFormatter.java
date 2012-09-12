@@ -17,6 +17,7 @@ import eu.wisebed.wiserdf.rdfNodeExporter;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,16 @@ public class RdfFormatter implements Formatter {
      * Base Url to use with url links.
      */
     private static String baseUrl = "";
+    private Map<String, String> conversionMap;
+
+    public RdfFormatter() {
+        conversionMap = new HashMap<String, String>();
+        conversionMap.put("Centigrades", "http://dbpedia.org/page/Celsius");
+        conversionMap.put("Fahrenheit", "http://dbpedia.org/page/Fahrenheit");
+        conversionMap.put("Lux", "http://dbpedia.org/page/Lux");
+        conversionMap.put("%", "http://dbpedia.org/page/Percentage");
+        conversionMap.put("m", "http://dbpedia.org/page/Metre");
+    }
 
     /**
      * Returns a {@link RdfFormatter} instance.
@@ -407,7 +418,7 @@ public class RdfFormatter implements Formatter {
             wisemlCapability.setDatatype(capability.getDatatype());
             wisemlCapability.setDefaultvalue(capability.getDefaultvalue());
             wisemlCapability.setDescription(capability.getDescription());
-            wisemlCapability.setUnit(capability.getUnit());
+            wisemlCapability.setUnit(convert(capability.getUnit()));
             wisemlCapabilityList.add(wisemlCapability);
 
         }
@@ -429,4 +440,13 @@ public class RdfFormatter implements Formatter {
         return setup;
     }
 
+
+    private String convert(final String input) {
+        if (conversionMap.containsKey(input) == true) {
+            return conversionMap.get(input);
+        } else {
+            return input;
+        }
+
+    }
 }
