@@ -13,10 +13,16 @@ import eu.wisebed.wiseml.model.scenario.Timestamp;
 import eu.wisebed.wiseml.model.setup.Data;
 import eu.wisebed.wiseml.model.trace.Trace;
 import eu.wisebed.wiserdf.WiseML2RDF;
-import eu.wisebed.wiserdf.rdfNodeExporter;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.restlet.data.MediaType;
+import org.restlet.data.Status;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -200,26 +206,53 @@ public class RdfFormatter implements Formatter {
     @Override
     public final Object formatNodeReadings(final List<NodeReading> nodeReadings) throws NotImplementedException {
 
-
-        rdfNodeExporter ndf = new rdfNodeExporter("http://uberdust.cti.gr/rest/testbed/1");
-
-        Node wisedbNode = nodeReadings.get(0).getCapability().getNode();
-        List<Capability> capabilityList = new LinkedList<Capability>();
-        capabilityList.add(nodeReadings.get(0).getCapability().getCapability());
-        eu.wisebed.wiseml.model.setup.Node wisemlNode = initWisemlNode(wisedbNode, capabilityList);
-
-        Data d = new Data();
-        d.setKey(nodeReadings.get(0).getCapability().getCapability().getDescription());
-
-        if (nodeReadings.get(0).getReading() == null) {
-            d.setValue(nodeReadings.get(0).getStringReading());
-        } else {
-            d.setValue(nodeReadings.get(0).getReading().toString());
+        if ((nodeReadings == null) || (nodeReadings.size() == 0)) {
+            return "No values provided";
         }
 
-        DateTime ts = new DateTime(nodeReadings.get(0).getTimestamp());
-        String room = nodeReadings.get(1).getStringReading();
-        return ndf.exportNode(wisemlNode, d, ts, room);
+        String response = null;
+        try {
+            JSONObject json = new JSONObject();
+            json.put("uri", "http://uberdust.cti.gr/rest/testbed/"
+                    + nodeReadings.get(0).getCapability().getNode().getSetup().getId()
+                    + "/node/" + nodeReadings.get(0).getCapability().getNode().getName());
+            json.put("context", "");
+            json.put("resource_time", nodeReadings.get(0).getTimestamp().getTime());
+
+            JSONArray vals = new JSONArray();
+
+            LOGGER.info(json.toString());
+
+            for (int i = 0; i < nodeReadings.size(); i++) {
+                if (nodeReadings.get(i).getReading() != null) {
+                    vals.put(nodeReadings.get(i).getReading());
+                } else {
+                    vals.put(nodeReadings.get(i).getStringReading());
+                }
+            }
+
+            json.put("values", vals);
+
+            LOGGER.info(json.toString());
+
+
+            ClientResource cr = new ClientResource("http://uberdust.cti.gr:8182/ld4s/ov/");
+            Representation resp = cr.post(json.toString(), MediaType.APPLICATION_RDF_XML);
+            Status status = cr.getStatus();
+            if (status.isError()) {
+                LOGGER.error(status.getCode() + " " + status.getDescription());
+                return status.getCode() + " " + status.getDescription();
+            } else {
+                return resp.getText();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return response;
     }
 
     @Override
@@ -403,7 +436,7 @@ public class RdfFormatter implements Formatter {
     public eu.wisebed.wiseml.model.setup.Node initWisemlNode(Node wisedbNode, List<Capability> ncaps) {
 
         eu.wisebed.wiseml.model.setup.Node wisemlNode = new eu.wisebed.wiseml.model.setup.Node();
-        wisemlNode.setId(wisedbNode.getName());
+        wisemlNode.setId("sad");
 
 
         List<Capability> wisedbCapabilityList = ncaps;
