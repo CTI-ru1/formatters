@@ -122,7 +122,7 @@ public class HtmlFormatter implements Formatter {
                 .append(tdCell(urlLink(new StringBuilder()
                         .append("/rest/testbed/").append(node.getSetup().getId())
                         .append("/node/").append(node.getName())
-                        .append("/rdf").toString()
+                        .append("/rdf/rdf+xml/").toString()
                         , "Rdf Description"
                 ))).append(E_ROW);
 
@@ -465,6 +465,9 @@ public class HtmlFormatter implements Formatter {
                 innerTable.append(tdCell(urlLink(
                         basicUrl + "/latestreading/json"
                         , "Last Reading JSON")));
+                innerTable.append(tdCell(urlLink(
+                        basicUrl + "/rdf/rdf+xml/limit/1"
+                        , "Last Reading RDF_XML")));
                 innerTable.append(tdCell(urlLink(
                         basicUrl + "/chart/limit/10"
                         , "Chart")));
