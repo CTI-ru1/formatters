@@ -444,6 +444,14 @@ public class HtmlFormatter implements Formatter {
                                 + "/capability/" + nCap.getCapability().getName()
                         , nCap.getCapability().getName()
                 )));
+                innerTable.append(tdCell(urlLink(
+                        "/rest/testbed/"
+                                + nCap.getNode().getSetup().getId()
+                                + "/node/" + nCap.getNode().getName()
+                                + "/capability/" + nCap.getCapability().getName()
+                                + "/rdf/rdf+xml", "<img alt='RdfDescription' src='http://di2.deri.ie/fileadmin/images/blog/rdf.jpg' width='35'>"
+                )));
+
                 final String basicUrl = "/rest/testbed/" + nCap.getNode().getSetup().getId()
                         + "/node/" + nCap.getNode().getName()
                         + "/capability/" + nCap.getCapability().getName();
