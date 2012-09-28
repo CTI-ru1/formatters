@@ -277,7 +277,7 @@ public class RdfFormatter implements Formatter {
             LOGGER.info(json.toString());
 
 
-            ClientResource cr = new ClientResource("http://localhost:8182/ld4s/device/");
+            ClientResource cr = new ClientResource("http://uberdust.cti.gr:8182/ld4s/device/");
             Representation resp = cr.post(json.toString(), MediaType.APPLICATION_RDF_XML);
             List<Preference<MediaType>> accepted = new LinkedList<Preference<MediaType>>();
             accepted.add(new Preference<MediaType>(MediaType.APPLICATION_RDF_XML));
@@ -339,7 +339,7 @@ public class RdfFormatter implements Formatter {
             LOGGER.info(json.toString());
 
 
-            ClientResource cr = new ClientResource("http://localhost:8182/ld4s/ov/");
+            ClientResource cr = new ClientResource("http://uberdust.cti.gr:8182/ld4s/ov/");
             Representation resp = cr.post(json.toString(), MediaType.APPLICATION_RDF_XML);
             Status status = cr.getStatus();
             if (status.isError()) {
