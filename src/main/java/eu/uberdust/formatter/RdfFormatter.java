@@ -141,52 +141,51 @@ public class RdfFormatter implements Formatter {
     public Object formatNode(Node wisedbNode) throws NotImplementedException {
 
 
-//        //create new wiseml
-//        WiseML wiseML = new WiseML();
-//        wiseML.setVersion("1.0");
-//        wiseML.setXmlns("http://wisebed.eu/ns/wiseml/1.0");
-//
-//        //init wisemlNODE
-//        eu.wisebed.wiseml.model.setup.Node wisemlNode = initWisemlNode(wisedbNode, null);
-//
-//        //init wisemlTRACE
-//        Trace trace = initTrace(wisedbNode, wisemlNode, null);
-//        wiseML.setTrace(trace);
-//
-//        //init wisemlSETUP
-//        eu.wisebed.wiseml.model.setup.Setup setup;
-//        setup = initSetup(wisedbNode.getSetup());
-//        List<eu.wisebed.wiseml.model.setup.Node> nodeList = new LinkedList<eu.wisebed.wiseml.model.setup.Node>();
-//        nodeList.add(wisemlNode);
-//        setup.setNodes(nodeList);
-//        wiseML.setSetup(setup);
-//
-//        //init wisemlSCENARIO
-//        wiseML.setScenario(new Scenario());
-//
-//
-//        //create a converter
-//        WiseML2RDF ml2RDF = new WiseML2RDF(wiseML);
-//        Model wiseModel;
-//        wiseModel = ModelFactory.createDefaultModel();
-//        wiseModel.setNsPrefix("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-//        wiseModel.setNsPrefix("wiserdf", uri);
-//        //generate RDF
-//        ml2RDF.exportRDF(wiseModel, uri);
-//
-//        return wiseModel;
-////        String answer = "";
-////        try {
-////            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-////            wiseModel.write(bos, "RDF/XML");
-////            answer = bos.toString();
-////            System.out.println(answer);
-////        } catch (Exception e) {
-////            LOGGER.info("Error in dumping to rdf file: " + e);
-////        }
-////        return answer;
+        //create new wiseml
+        WiseML wiseML = new WiseML();
+        wiseML.setVersion("1.0");
+        wiseML.setXmlns("http://wisebed.eu/ns/wiseml/1.0");
 
-        return "";
+        //init wisemlNODE
+        eu.wisebed.wiseml.model.setup.Node wisemlNode = initWisemlNode(wisedbNode, null);
+
+        //init wisemlTRACE
+        Trace trace = initTrace(wisedbNode, wisemlNode, null);
+        wiseML.setTrace(trace);
+
+        //init wisemlSETUP
+        eu.wisebed.wiseml.model.setup.Setup setup;
+        setup = initSetup(wisedbNode.getSetup());
+        List<eu.wisebed.wiseml.model.setup.Node> nodeList = new LinkedList<eu.wisebed.wiseml.model.setup.Node>();
+        nodeList.add(wisemlNode);
+        setup.setNodes(nodeList);
+        wiseML.setSetup(setup);
+
+        //init wisemlSCENARIO
+        wiseML.setScenario(new Scenario());
+
+
+        //create a converter
+        WiseML2RDF ml2RDF = new WiseML2RDF(wiseML);
+        Model wiseModel;
+        wiseModel = ModelFactory.createDefaultModel();
+        wiseModel.setNsPrefix("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+        wiseModel.setNsPrefix("wiserdf", uri);
+        //generate RDF
+        ml2RDF.exportRDF(wiseModel, uri);
+
+        return wiseModel;
+//        String answer = "";
+//        try {
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            wiseModel.write(bos, "RDF/XML");
+//            answer = bos.toString();
+//            System.out.println(answer);
+//        } catch (Exception e) {
+//            LOGGER.info("Error in dumping to rdf file: " + e);
+//        }
+//        return answer;
+
     }
 
     @Override
@@ -195,6 +194,12 @@ public class RdfFormatter implements Formatter {
     }
 
     private JSONArray wrapValue(String str) {
+        JSONArray array = new JSONArray();
+        array.put(str);
+        return array;
+    }
+
+    private JSONArray wrapValue(JSONArray str) {
         JSONArray array = new JSONArray();
         array.put(str);
         return array;
@@ -224,9 +229,9 @@ public class RdfFormatter implements Formatter {
             JSONObject json = new JSONObject();
             JSONArray authorDetails = new JSONArray();
             JSONObject surnameobj = new JSONObject();
-            surnameobj.put("surname", "amaxilatis");
+            surnameobj.put("surname", "Chatzigiannakis");
             JSONObject nameobj = new JSONObject();
-            nameobj.put("name", "dimitrios");
+            nameobj.put("firstname", "Ioannis");
 
             authorDetails.put(surnameobj);
             authorDetails.put(nameobj);
@@ -257,7 +262,7 @@ public class RdfFormatter implements Formatter {
             ));
 
 
-            json.put("location-coords", wrapValue(nodeReading.getCapability().getNode().getSetup().getOrigin().getX() + "_"+nodeReading.getCapability().getNode().getSetup().getOrigin().getY()));
+            json.put("location-coords", wrapValue(nodeReading.getCapability().getNode().getSetup().getOrigin().getX() + "_" + nodeReading.getCapability().getNode().getSetup().getOrigin().getY()));
 
 
             JSONArray vals = new JSONArray();
@@ -434,7 +439,87 @@ public class RdfFormatter implements Formatter {
 
     @Override
     public String describeNodeCapabilities(List<NodeCapability> capabilities) throws NotImplementedException {
-        throw new NotImplementedException();
+
+        //{
+        // "systems":[["http://www.example.org/device/2","http://www.example.org/device/1"]],
+        // "algorithms":[["http://www.example.org/alg/45","http://www.example.org/alg/18"]],
+        // "worn_by":[[ [{"surname":["Hausenblas"],"firstname":["Michael"]}], [{"surname":["Amaxilatis"],"firstname":["Dimitrios"]}] ]],
+        // "owners":[[ [{"surname":["Leggieri"],"firstname":["Myriam"]}], [{"surname":["Hauswirth"],"firstname":["Manfred"]}] ]],
+        // "author":[{"surname":["Theodoridis"],"firstname":["Evangelos"]}],
+        // "location-name":["Patras"],
+        // "location-coords":["38.24444_21.73444"]},
+        // "start_range":["5800"], "end_range":["10321"],
+        // }
+
+        String response = null;
+        try {
+            JSONObject json = new JSONObject();
+            JSONArray authorDetails = new JSONArray();
+            JSONObject surnameobj = new JSONObject();
+            surnameobj.put("surname", wrapValue("Chatzigiannakis"));
+            JSONObject nameobj = new JSONObject();
+            nameobj.put("firstname", wrapValue("Ioannis"));
+
+            authorDetails.put(surnameobj);
+            authorDetails.put(nameobj);
+
+            json.put("author", authorDetails);
+
+            JSONArray vals = new JSONArray();
+
+            for (NodeCapability capability : capabilities) {
+                vals.put("http://uberdust.cti.gr/rest/testbed/"
+                        + capability.getNode().getSetup().getId()
+                        + "/node/" + capability.getNode().getName()
+                        + "/capability/" + capability.getCapability().getName()
+                        + "/rdf/rdf+xml"
+                );
+            }
+
+
+            json.put("systems", wrapValue(
+                    vals
+            ));
+            json.put("location-coords", wrapValue(capabilities.get(0).getNode().getSetup().getOrigin().getX() + "_" + capabilities.get(0).getNode().getSetup().getOrigin().getY()));
+
+
+//            LOGGER.info(json.toString());
+//
+//            for (int i = 0; i < nodeReadings.size(); i++) {
+//                if (nodeReadings.get(i).getReading() != null) {
+//                    vals.put(nodeReadings.get(i).getReading());
+//                } else {
+//                    vals.put(nodeReadings.get(i).getStringReading());
+//                }
+//            }
+//
+//            json.put("values", vals);
+
+            LOGGER.info(json.toString());
+
+
+            ClientResource cr = new ClientResource("http://uberdust.cti.gr:8182/ld4s/tpp/");
+            Representation resp = cr.post(json.toString(), MediaType.APPLICATION_RDF_XML);
+            List<Preference<MediaType>> accepted = new LinkedList<Preference<MediaType>>();
+            accepted.add(new Preference<MediaType>(MediaType.APPLICATION_RDF_XML));
+            cr.getClientInfo().setAcceptedMediaTypes(accepted);
+
+            Status status = cr.getStatus();
+            if (status.isError()) {
+                LOGGER.error(status.getCode() + " " + status.getDescription());
+                return status.getCode() + " " + status.getDescription();
+            } else {
+                return resp.getText();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return response;
+
     }
 
     private Trace initTrace(Node wisedbNode, eu.wisebed.wiseml.model.setup.Node wisemlNode, List<Capability> caps) {

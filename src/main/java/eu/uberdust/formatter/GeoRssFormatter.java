@@ -205,15 +205,17 @@ public class GeoRssFormatter implements Formatter {
                     .append(testbed.getId()).append("/node/").append(node.getName()).append("/georss").append("\">")
                     .append("GeoRSS feed").append("</a></p>");
             descriptionBuffer.append("<ul>");
-            for (final NodeCapability capability : capabilityMap.get(node)) {
-                if (capability.getLastNodeReading().getReading() != null) {
-                    descriptionBuffer.append("<li>").append(capability.getCapability().getName()).append(":")
-                            .append(capability.getLastNodeReading().getReading()).append("</li>");
-                } else if (capability.getLastNodeReading().getStringReading() != null) {
-                    descriptionBuffer.append("<li>").append(capability.getCapability().getName()).append(":")
-                            .append(capability.getLastNodeReading().getStringReading()).append("</li>");
-                }
+            if (capabilityMap.containsKey(node)) {
+                for (final NodeCapability capability : capabilityMap.get(node)) {
+                    if (capability.getLastNodeReading().getReading() != null) {
+                        descriptionBuffer.append("<li>").append(capability.getCapability().getName()).append(":")
+                                .append(capability.getLastNodeReading().getReading()).append("</li>");
+                    } else if (capability.getLastNodeReading().getStringReading() != null) {
+                        descriptionBuffer.append("<li>").append(capability.getCapability().getName()).append(":")
+                                .append(capability.getLastNodeReading().getStringReading()).append("</li>");
+                    }
 
+                }
             }
             descriptionBuffer.append("</ul>");
             description.setType("text/html");
@@ -228,27 +230,28 @@ public class GeoRssFormatter implements Formatter {
             } else {
                 // convert node position from xyz to long/lat
 
-                Position npos;
-                try {
-                    npos = originMap.get(node);
-                } catch (NullPointerException e) {
-                    npos = new Position();
-                    npos.setX(testbed.getSetup().getOrigin().getX());
-                    npos.setY(testbed.getSetup().getOrigin().getY());
-                    npos.setZ(testbed.getSetup().getOrigin().getZ());
-                    npos.setPhi(testbed.getSetup().getOrigin().getPhi());
-                    npos.setTheta(testbed.getSetup().getOrigin().getTheta());
+                if (originMap.containsKey(node)) {
+                    Position npos;
+                    try {
+                        npos = originMap.get(node);
+                    } catch (NullPointerException e) {
+                        npos = new Position();
+                        npos.setX(testbed.getSetup().getOrigin().getX());
+                        npos.setY(testbed.getSetup().getOrigin().getY());
+                        npos.setZ(testbed.getSetup().getOrigin().getZ());
+                        npos.setPhi(testbed.getSetup().getOrigin().getPhi());
+                        npos.setTheta(testbed.getSetup().getOrigin().getTheta());
+                    }
+                    nodeCoordinate.setX((double) npos.getX());
+                    nodeCoordinate.setY((double) npos.getY());
+                    nodeCoordinate.setZ((double) npos.getZ());
+
+                    final Coordinate rotated = Coordinate.rotate(nodeCoordinate, properOrigin.getPhi());
+                    final Coordinate absolute = Coordinate.absolute(properOrigin, rotated);
+                    final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
+                    geoRSSModule.setPosition(new com.sun.syndication.feed.module.georss.geometries.Position(
+                            nodePosition.getX(), nodePosition.getY()));
                 }
-
-                nodeCoordinate.setX((double) npos.getX());
-                nodeCoordinate.setY((double) npos.getY());
-                nodeCoordinate.setZ((double) npos.getZ());
-
-                final Coordinate rotated = Coordinate.rotate(nodeCoordinate, properOrigin.getPhi());
-                final Coordinate absolute = Coordinate.absolute(properOrigin, rotated);
-                final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
-                geoRSSModule.setPosition(new com.sun.syndication.feed.module.georss.geometries.Position(
-                        nodePosition.getX(), nodePosition.getY()));
             }
             entry.getModules().add(geoRSSModule);
             entries.add(entry);
@@ -257,13 +260,13 @@ public class GeoRssFormatter implements Formatter {
         // add entries to feed
         feed.setEntries(entries);
 
+        System.out.println(feed.toString());
 // the feed output goes to response
         final SyndFeedOutput output = new SyndFeedOutput();
+
         StringWriter writer = new StringWriter();
         try {
-            output.output(feed, writer);
-        } catch (IOException e) {
-            LOGGER.error(e);
+            writer.append(output.outputString(feed));
         } catch (FeedException e) {
             LOGGER.error(e);
         }
