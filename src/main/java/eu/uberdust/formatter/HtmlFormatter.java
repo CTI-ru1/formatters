@@ -97,7 +97,7 @@ public class HtmlFormatter implements Formatter {
 
         final StringBuilder output = new StringBuilder();
         output.append(S_TABLE);
-        output.append(S_ROW).append(tdCell("Node ID")).append(tdCell(urlLink(node))).append(E_ROW);
+        output.append(S_ROW).append(tdCell("Name")).append(tdCell(urlLink(node))).append(E_ROW);
         output.append(S_ROW).append(tdCell("GeoRSS Feed"))
                 .append(tdCell(urlLink(
                         new StringBuilder()
@@ -105,8 +105,7 @@ public class HtmlFormatter implements Formatter {
                                 .append("/node/").append(node.getName())
                                 .append("/georss").toString()
                         , "GeoRSS Feed"
-                )))
-                .append(tdCell(new StringBuilder().append("<a href='http://maps.google.com/maps?q=").append(baseUrl).append("/rest/testbed/").append(node.getSetup().getId()).append("/node/").append(node.getName()).append("/georss' > View on Google Maps </a>").toString()
+                ) + new StringBuilder().append("<a href='http://maps.google.com/maps?q=").append(baseUrl).append("/rest/testbed/").append(node.getSetup().getId()).append("/node/").append(node.getName()).append("/georss' > <img width=40px src=\"http://squash2020.com/wp-content/uploads/2012/09/google-map-logo.gif\"> </a>").toString()
                 )).append(E_ROW);
         output.append(S_ROW).append(tdCell("KML Feed"))
                 .append(tdCell(urlLink(new StringBuilder()
@@ -114,11 +113,10 @@ public class HtmlFormatter implements Formatter {
                         .append("/node/").append(node.getName())
                         .append("/kml").toString()
                         , "Kml Feed"
-                )))
-                .append(tdCell(new StringBuilder()
+                ) + new StringBuilder()
                         .append("<a href='http://maps.google.com/maps?q=").append(baseUrl)
                         .append("/rest/testbed/").append(node.getSetup().getId())
-                        .append("/node/").append(node.getName()).append("/kml' > View on Google Maps </a>").toString()
+                        .append("/node/").append(node.getName()).append("/kml' > <img width=40px src=\"http://squash2020.com/wp-content/uploads/2012/09/google-map-logo.gif\"> </a>").toString()
                 )).append(E_ROW);
         output.append(S_ROW).append(tdCell("Rdf description"))
                 .append(tdCell(urlLink(new StringBuilder()
@@ -128,15 +126,25 @@ public class HtmlFormatter implements Formatter {
                         , "Rdf Description"
                 ))).append(E_ROW);
 
-        output.append(E_TABLE);
-        output.append(S_TABLE);
+        StringBuilder virtualParts = new StringBuilder();
+
         List<Link> links = LinkControllerImpl.getInstance().getBySource(node);
-        output.append("<tr><th>Composed of : <th></tr>");
+        virtualParts.append("<tr><th>Nodes : </th><td>");
+        boolean hasVirtual = false;
         for (Link link : links) {
             LinkCapability lr = LinkCapabilityControllerImpl.getInstance().getByID(link, "virtual");
-            if ((lr!=null)&&(lr.getLastLinkReading().getReading()!=null)&&(lr.getLastLinkReading().getReading()==1)){
-                output.append("<tr><td>"+lr.getLink().getTarget().getName()+"<td></tr>");
+            if ((lr != null) && (lr.getLastLinkReading().getReading() != null) && (lr.getLastLinkReading().getReading() == 1)) {
+                hasVirtual = true;
+                virtualParts.append(urlLink(
+                        new StringBuilder()
+                                .append("/rest/testbed/").append(lr.getLink().getTarget().getSetup().getId())
+                                .append("/node/").append(lr.getLink().getTarget().getName())
+                                .append("/").toString(), lr.getLink().getTarget().getName() + "<br/>"));
             }
+        }
+        virtualParts.append("</td></tr>");
+        if (hasVirtual) {
+            output.append(virtualParts.toString());
         }
         output.append(E_TABLE);
 
