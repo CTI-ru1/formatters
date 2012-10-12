@@ -3,6 +3,8 @@ package eu.uberdust.formatter;
 import eu.uberdust.caching.Cachable;
 import eu.uberdust.formatter.exception.NotImplementedException;
 import eu.uberdust.formatter.util.Tag;
+import eu.wisebed.wisedb.controller.LinkCapabilityControllerImpl;
+import eu.wisebed.wisedb.controller.LinkControllerImpl;
 import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 
@@ -126,8 +128,18 @@ public class HtmlFormatter implements Formatter {
                         , "Rdf Description"
                 ))).append(E_ROW);
 
-
         output.append(E_TABLE);
+        output.append(S_TABLE);
+        List<Link> links = LinkControllerImpl.getInstance().getBySource(node);
+        output.append("<tr><th>Composed of : <th></tr>");
+        for (Link link : links) {
+            LinkCapability lr = LinkCapabilityControllerImpl.getInstance().getByID(link, "virtual");
+            if ((lr!=null)&&(lr.getLastLinkReading().getReading()!=null)&&(lr.getLastLinkReading().getReading()==1)){
+                output.append("<tr><td>"+lr.getLink().getTarget().getName()+"<td></tr>");
+            }
+        }
+        output.append(E_TABLE);
+
 
         return output.toString();
     }
