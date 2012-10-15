@@ -350,6 +350,11 @@ public class GeoRssFormatter implements Formatter {
     }
 
     @Override
+    public String formatVirtualNodes(List<Node> nodes) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public final String formatUniqueLastNodeReadings(final List<NodeCapability> nodeCapabilities)
             throws NotImplementedException {
         throw new NotImplementedException();

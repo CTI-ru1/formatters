@@ -346,4 +346,8 @@ public class JsonFormatter implements Formatter {
     public String describeNodeCapabilities(List<NodeCapability> capabilities) throws NotImplementedException {
         throw new NotImplementedException();
     }
+    @Override
+    public String formatVirtualNodes(List<Node> nodes) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
 }

@@ -113,6 +113,16 @@ public interface Formatter {
     String formatNodes(final List<Node> nodes) throws NotImplementedException;
 
     /**
+     * Formats a given List of {@link Node} objects to the target format.
+     *
+     * @param nodes a list of {@link Node} objects.
+     * @return a string containing the formatted object.
+     * @throws NotImplementedException when not implemented the function informs the handler.
+     */
+    String formatVirtualNodes(final List<Node> nodes) throws NotImplementedException;
+
+
+    /**
      * Formats a given List of {@link NodeReading} objects to the target format.
      *
      * @param nodeReadings a list of {@link NodeReading} objects.

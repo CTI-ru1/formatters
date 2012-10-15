@@ -670,4 +670,8 @@ public class RdfFormatter implements Formatter {
         }
 
     }
+    @Override
+    public String formatVirtualNodes(List<Node> nodes) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
 }

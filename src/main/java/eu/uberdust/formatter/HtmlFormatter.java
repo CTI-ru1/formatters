@@ -585,24 +585,67 @@ public class HtmlFormatter implements Formatter {
 
 
         final StringBuilder output = new StringBuilder();
-        output.append(S_TABLE);
         if (nodes.isEmpty()) {
             return "<p style=\"color : red\">No nodes found!</p>";
         } else {
-            output.append(S_ROW).append(tdCell(
-                    urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node", "Nodes")
-                            + " (" + nodes.size() + ") ["
-                            + urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node/raw", "raw") + ", "
-                            + urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node/json", "json")
-                            + "]"
-
-            )).append(E_ROW);
+            int counter = 0;
             for (final Node node : nodes) {
+                if (node.getName().contains("virtual")) {
+                    continue;
+                }
+                counter++;
                 output.append(S_ROW).append(tdCell(urlLink(
                         "/rest/testbed/" + node.getSetup().getTestbed().getId() + "/node/" + node.getName() + "/"
                         , node.getName()
                 ))).append(E_ROW);
             }
+            StringBuilder header = new StringBuilder();
+            header.append(S_ROW).append(tdCell(
+                    urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node", "Nodes")
+                            + " (" + counter + ") ["
+                            + urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node/raw", "raw") + ", "
+                            + urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node/json", "json")
+                            + "]"
+
+            )).append(E_ROW);
+            output.insert(0, header.toString());
+            output.insert(0,S_TABLE);
+        }
+        output.append(E_TABLE);
+        return output.toString();
+    }
+
+
+    public final String formatVirtualNodes(final List<Node> nodes) throws NotImplementedException {
+        LOGGER.info("formatVirtualNodes");
+
+
+        final StringBuilder output = new StringBuilder();
+        if (nodes.isEmpty()) {
+            return "<p style=\"color : red\">No Virtual Nodes found!</p>";
+        } else {
+            int counter=0;
+            for (final Node node : nodes) {
+                if (!node.getName().contains("virtual")) {
+                    continue;
+                }
+                counter++;
+                output.append(S_ROW).append(tdCell(urlLink(
+                        "/rest/testbed/" + node.getSetup().getTestbed().getId() + "/node/" + node.getName() + "/"
+                        , node.getName()
+                ))).append(E_ROW);
+            }
+            StringBuilder header = new StringBuilder();
+            header.append(S_ROW).append(tdCell(
+                    urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node", "Virtual Nodes")
+                            + " (" + counter + ") ["
+                            + urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node/raw", "raw") + ", "
+                            + urlLink("/rest/testbed/" + nodes.get(0).getSetup().getId() + "/node/json", "json")
+                            + "]"
+
+            )).append(E_ROW);
+            output.insert(0, header.toString());
+            output.insert(0,S_TABLE);
         }
         output.append(E_TABLE);
         return output.toString();
@@ -706,7 +749,7 @@ public class HtmlFormatter implements Formatter {
                         , "GeoRss Feed")
                         + "   <a href='http://maps.google.com/maps?q="
                         + baseUrl + "/rest/testbed/" + testbed.getId() + "/georss"
-                        + "'>View On Google Maps</a>"
+                        + "'><img width=40px src=\"http://squash2020.com/wp-content/uploads/2012/09/google-map-logo.gif\"> </a>"
                 )).append(E_ROW);
         output.append(S_ROW).append(tdCell("Testbed KML feed"))
                 .append(tdCell(urlLink(
@@ -714,7 +757,7 @@ public class HtmlFormatter implements Formatter {
                         , "Kml Feed")
                         + "   <a href='http://maps.google.com/maps?q="
                         + baseUrl + "/rest/testbed/" + testbed.getId() + "/kml"
-                        + "'>View On Google Maps</a>"
+                        + "'><img width=40px src=\"http://squash2020.com/wp-content/uploads/2012/09/google-map-logo.gif\"> </a>"
                 )).append(E_ROW);
         output.append(S_ROW).append(tdCell("Testbed WiseML"))
                 .append(tdCell(urlLink("/rest/testbed/" + testbed.getId() + "/wiseml", "WiseML"))).append(E_ROW);
@@ -725,6 +768,7 @@ public class HtmlFormatter implements Formatter {
         output.append("<td style=\"vertical-align:top\"> " + formatNodes(nodes) + "</td>");
         output.append("<td style=\"vertical-align:top\"> " + formatLinks(links) + "</td>");
         output.append("<td style=\"vertical-align:top\"> " + formatCapabilities(testbed, capabilities) + "</td>");
+        output.append("<td style=\"vertical-align:top\"> " + formatVirtualNodes(nodes) + "</td>");
         output.append(E_ROW);
         output.append(E_TABLE);
 

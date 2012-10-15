@@ -315,4 +315,8 @@ public class TextFormatter implements Formatter {
 
         return output.toString();
     }
+    @Override
+    public String formatVirtualNodes(List<Node> nodes) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
 }
