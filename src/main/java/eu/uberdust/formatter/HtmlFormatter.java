@@ -505,20 +505,6 @@ public class HtmlFormatter implements Formatter {
                 innerTable.append(tdCell(urlLink(
                         basicUrl + "/live"
                         , "Live")));
-//                if (nCap.getNode().getName().contains("virtual")) {
-//                    innerTable.append(tdCell("<div id='" + nCap.getCapability().getName() + "-1'>" +
-//                            "<script type='text/javascript'> " +
-//                            " document.getElementById('" + nCap.getCapability().getName() + "-1').innerHTML " +
-//                            "= create_qrcode('" + baseUrl+basicUrl + "/insert/timestamp/0/reading/1/" + "');" +
-//                            "</script></div>"));
-//                }
-//                if (nCap.getNode().getName().contains("virtual")) {
-//                    innerTable.append(tdCell("<div id='" + nCap.getCapability().getName() + "-0'>" +
-//                            "<script type='text/javascript'> " +
-//                            " document.getElementById('" + nCap.getCapability().getName() + "-0').innerHTML " +
-//                            "= create_qrcode('" + baseUrl+basicUrl + "/insert/timestamp/0/reading/0/" + "');" +
-//                            "</script></div>"));
-//                }
                 innerTable.append(E_ROW);
             }
             innerTable.append(E_TABLE);
