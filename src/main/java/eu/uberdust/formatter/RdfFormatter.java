@@ -21,6 +21,7 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Preference;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
 import java.io.IOException;
@@ -282,8 +283,11 @@ public class RdfFormatter implements Formatter {
             LOGGER.info(json.toString());
 
 
-            ClientResource cr = new ClientResource("http://uberdust.cti.gr:8182/ld4s/device/");
-            Representation resp = cr.post(json.toString(), MediaType.APPLICATION_RDF_XML);
+            ClientResource cr = new ClientResource("http://localhost:8182/ld4s/device/");
+            StringRepresentation stringRep = new StringRepresentation(json.toString());
+            stringRep.setMediaType(MediaType.APPLICATION_JSON);
+            Representation resp = cr.post(stringRep);
+
             List<Preference<MediaType>> accepted = new LinkedList<Preference<MediaType>>();
             accepted.add(new Preference<MediaType>(MediaType.APPLICATION_RDF_XML));
             cr.getClientInfo().setAcceptedMediaTypes(accepted);
@@ -344,7 +348,7 @@ public class RdfFormatter implements Formatter {
             LOGGER.info(json.toString());
 
 
-            ClientResource cr = new ClientResource("http://uberdust.cti.gr:8182/ld4s/ov/");
+            ClientResource cr = new ClientResource("http://localhost:8182/ld4s/ov/");
             Representation resp = cr.post(json.toString(), MediaType.APPLICATION_RDF_XML);
             Status status = cr.getStatus();
             if (status.isError()) {
@@ -498,7 +502,7 @@ public class RdfFormatter implements Formatter {
             LOGGER.info(json.toString());
 
 
-            ClientResource cr = new ClientResource("http://uberdust.cti.gr:8182/ld4s/tpp/");
+            ClientResource cr = new ClientResource("http://localhost:8182/ld4s/tpp/");
             Representation resp = cr.post(json.toString(), MediaType.APPLICATION_RDF_XML);
             List<Preference<MediaType>> accepted = new LinkedList<Preference<MediaType>>();
             accepted.add(new Preference<MediaType>(MediaType.APPLICATION_RDF_XML));
@@ -521,6 +525,97 @@ public class RdfFormatter implements Formatter {
         return response;
 
     }
+
+
+    public String describeNodeCapability(List<NodeCapability> capabilities) throws NotImplementedException {
+
+        //{
+        // "systems":[["http://www.example.org/device/2","http://www.example.org/device/1"]],
+        //- "algorithms":[["http://www.example.org/alg/45","http://www.example.org/alg/18"]],
+        //- "worn_by":[[ [{"surname":["Hausenblas"],"firstname":["Michael"]}], [{"surname":["Amaxilatis"],"firstname":["Dimitrios"]}] ]],
+        //- "owners":[[ [{"surname":["Leggieri"],"firstname":["Myriam"]}], [{"surname":["Hauswirth"],"firstname":["Manfred"]}] ]],
+        //+ "author":[{"surname":["Theodoridis"],"firstname":["Evangelos"]}],
+        // "location-name":["Patras"], "location-coords":["38.24444_21.73444"]},
+        // "start_range":["5800"],
+        // "end_range":["10321"],
+        // }
+
+        String response = null;
+        try {
+            JSONObject json = new JSONObject();
+
+            json.put("author", generateAuthorDetails());
+
+            JSONArray vals = new JSONArray();
+
+            for (NodeCapability capability : capabilities) {
+                vals.put("http://uberdust.cti.gr/rest/testbed/"
+                        + capability.getNode().getSetup().getId()
+                        + "/node/" + capability.getNode().getName()
+                        + "/capability/" + capability.getCapability().getName()
+                        + "/rdf/rdf+xml"
+                );
+            }
+            json.put("tpproperties", wrapValue(
+                    vals
+            ));
+
+//            json.put("algorithms", new JSONArray(new JsonArray()));
+//            json.put("owners", new JSONArray(new JsonArray()));
+//            json.put("worn_by", new JSONArray(new JsonArray()));
+//            json.put("location-name", wrapValue("Patras"));
+            json.put("base_datetime", wrapValue("0"));
+            json.put("base_name", wrapValue(""));
+//            json.put("end_range", wrapValue("0"));
+
+
+//            json.put("location-coords", generateSensorCoordinates(capabilities.get(0).getNode().getSetup().getOrigin().getX(), capabilities.get(0).getNode().getSetup().getOrigin().getY()));
+
+            LOGGER.info(json.toString());
+
+
+            ClientResource cr = new ClientResource("http://localhost:8182/ld4s/platform/");
+            Representation resp = cr.post(json);
+            List<Preference<MediaType>> accepted = new LinkedList<Preference<MediaType>>();
+            accepted.add(new Preference<MediaType>(MediaType.APPLICATION_RDF_XML));
+            cr.getClientInfo().setAcceptedMediaTypes(accepted);
+
+            Status status = cr.getStatus();
+            if (status.isError()) {
+                LOGGER.error(status.getCode() + " " + status.getDescription());
+                return status.getCode() + " " + status.getDescription();
+            } else {
+                return resp.getText();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return response;
+
+    }
+
+    private JSONArray generateSensorCoordinates(final Float x, final Float y) {
+        JSONArray coordinates = wrapValue(x + "_" + y);
+        return coordinates;
+    }
+
+    private JSONArray generateAuthorDetails() throws JSONException {
+
+        JSONArray authorDetails = new JSONArray();
+        JSONObject surnameobj = new JSONObject();
+        surnameobj.put("surname", wrapValue("Chatzigiannakis"));
+        JSONObject nameobj = new JSONObject();
+        nameobj.put("firstname", wrapValue("Ioannis"));
+
+        authorDetails.put(surnameobj);
+        authorDetails.put(nameobj);
+        return authorDetails;
+    }
+
 
     private Trace initTrace(Node wisedbNode, eu.wisebed.wiseml.model.setup.Node wisemlNode, List<Capability> caps) {
         Trace trace = new Trace();
@@ -670,6 +765,7 @@ public class RdfFormatter implements Formatter {
         }
 
     }
+
     @Override
     public String formatVirtualNodes(List<Node> nodes) throws NotImplementedException {
         throw new NotImplementedException();
