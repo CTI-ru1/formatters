@@ -7,10 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Implements the {@link Formatter} Interface and converts Wisedb Objects to Json Objects.
@@ -111,6 +108,12 @@ public class JsonFormatter implements Formatter {
                 final JSONObject obj = new JSONObject();
                 obj.put("testbedId", testbed.getId());
                 obj.put("testbedName", testbed.getName());
+                obj.put("testbedUrnPrefix", testbed.getUrnPrefix());
+                obj.put("testbedUrnCapabilityPrefix", testbed.getUrnCapabilityPrefix());
+                obj.put("testbedTimeZone", testbed.getTimeZone().getDisplayName(Locale.US));
+                obj.put("testbedLongtitude", testbed.getSetup().getOrigin().getX());
+                obj.put("testbedLatitude", testbed.getSetup().getOrigin().getY());
+                obj.put("testbedAltitude", testbed.getSetup().getOrigin().getZ());
                 jsonArray.put(obj);
             }
         } catch (JSONException e) {

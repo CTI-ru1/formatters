@@ -470,7 +470,7 @@ public class HtmlFormatter implements Formatter {
                                         + nCap.getNode().getSetup().getId()
                                         + "/node/" + nCap.getNode().getName()
                                         + "/capability/" + nCap.getCapability().getName()
-                                        + "/rdf/rdf+xml", "<img alt='RdfDescription' src='http://di2.deri.ie/fileadmin/images/blog/rdf.jpg' width='20'>"
+                                        + "/rdf/rdf+xml", "<img alt='RdfDescription' src='/images/rdf.png' width='20'>"
                         )
 
                 ));
