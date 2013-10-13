@@ -29,7 +29,7 @@ public class FormatNodeReading {
         HibernateUtil.connectEntityManagers();
         Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
-            final Node node = NodeControllerImpl.getInstance().getByName("urn:wisebed:ctitestbed:0x712");
+            final Node node = NodeControllerImpl.getInstance().getByName("urn:wisebed:ctitestbed:0x191");
             Capability capability = CapabilityControllerImpl.getInstance().getByID("urn:wisebed:node:capability:light");
             List<NodeReading> capabilities = NodeReadingControllerImpl.getInstance().listNodeReadings(node, capability, 1);
 //            Capability roomCapability = CapabilityControllerImpl.getInstance().getByID("room");
