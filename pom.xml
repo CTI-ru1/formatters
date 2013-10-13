@@ -57,14 +57,6 @@
     </repositories>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.openjena</groupId>
-            <artifactId>fuseki</artifactId>
-            <version>0.1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/fuseki-0.1.0-server.jar</systemPath>
-        </dependency>
         <dependency>
             <groupId>uberdust</groupId>
             <artifactId>Cache</artifactId>
